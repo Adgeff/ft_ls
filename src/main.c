@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/03 10:02:40 by geargenc          #+#    #+#             */
-/*   Updated: 2018/05/16 14:07:40 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/05/31 07:33:13 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -375,11 +375,20 @@ int					ft_defexplore(t_env *env)
 	return (0);
 }
 
+int					ft_filestreatment(t_env *env)
+{
+	env->files = env->sort_f(env->files, env->comp_f);
+
+}
+
 int					ft_treatment(t_env *env)
 {
+	if (env->dirs_nbr > 1)
+		env->printdir_f = &ft_printdir_titled;
 	if (env->badargs)
 		ft_badargstreatment(env);
-	env->files = (env->files) ? env->sort_f(env->files, env->comp_f) : NULL;
+	if (env->files && ft_filestreatment(env))
+		return (1);
 	env->dirs = (env->dirs) ? env->sort_f(env->dirs, env->comp_f) : NULL;
 	while (env->files || env->dirs)
 		if (env->explore_f(env))
