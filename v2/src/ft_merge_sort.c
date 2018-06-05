@@ -6,15 +6,15 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/16 02:32:51 by geargenc          #+#    #+#             */
-/*   Updated: 2018/05/16 02:45:01 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/06/05 17:16:35 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void		ft_split_list(t_flist **list, t_flist **l1, t_flist **l2)
+void		ft_split_list(t_file **list, t_file **l1, t_file **l2)
 {
-	t_flist	*tmp;
+	t_file	*tmp;
 
 	*l1 = NULL;
 	*l2 = NULL;
@@ -30,9 +30,9 @@ void		ft_split_list(t_flist **list, t_flist **l1, t_flist **l2)
 	}
 }
 
-void		ft_moveall_to(t_flist **from, t_flist **to)
+void		ft_moveall_to(t_file **from, t_file **to)
 {
-	t_flist	*tmp;
+	t_file	*tmp;
 
 	while (*from)
 	{
@@ -43,9 +43,9 @@ void		ft_moveall_to(t_flist **from, t_flist **to)
 	}
 }
 
-void		ft_moveone_to(t_flist **from, t_flist **to)
+void		ft_moveone_to(t_file **from, t_file **to)
 {
-	t_flist	*tmp;
+	t_file	*tmp;
 
 	tmp = (*from)->next;
 	(*from)->next = *to;
@@ -53,10 +53,10 @@ void		ft_moveone_to(t_flist **from, t_flist **to)
 	*from = tmp;
 }
 
-t_flist		*ft_merge_sort_rev(t_flist *list, int (*f)(t_flist *, t_flist *))
+t_file		*ft_merge_sort_rev(t_file *list, int (*f)(t_file *, t_file *))
 {
-	t_flist	*l1;
-	t_flist	*l2;
+	t_file	*l1;
+	t_file	*l2;
 
 	if (!list->next)
 		return (list);
@@ -77,10 +77,10 @@ t_flist		*ft_merge_sort_rev(t_flist *list, int (*f)(t_flist *, t_flist *))
 	return (list);
 }
 
-t_flist		*ft_merge_sort(t_flist *list, int (*f)(t_flist *, t_flist *))
+t_file		*ft_merge_sort(t_file *list, int (*f)(t_file *, t_file *))
 {
-	t_flist	*l1;
-	t_flist	*l2;
+	t_file	*l1;
+	t_file	*l2;
 
 	if (!list->next)
 		return (list);

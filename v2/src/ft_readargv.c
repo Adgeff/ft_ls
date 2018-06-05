@@ -6,25 +6,26 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 12:13:10 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/05 12:53:50 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/06/05 18:08:50 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-t_opt		ft_opttab(int i)
+t_opt				ft_opttab(int i)
 {
-	t_opt	opttab[] = {
-		{'t', &ft_topt},
+	static t_opt	opttab[] = {
+		{'d', &ft_dopt},
+		{'r', &ft_ropt},
 		{'\0', &ft_illegalopt}
 	};
 
 	return (opttab[i]);
 }
 
-int			ft_readopt(t_env *env, char opt)
+int					ft_readopt(t_env *env, char opt)
 {
-	int		i;
+	int				i;
 
 	i = 0;
 	while (ft_opttab(i).opt && ft_opttab(i).opt != opt)
@@ -32,10 +33,10 @@ int			ft_readopt(t_env *env, char opt)
 	return (ft_opttab(i).f(env, opt));
 }
 
-int			ft_readopts(t_env *env)
+int					ft_readopts(t_env *env)
 {
-	int		i;
-	int		j;
+	int				i;
+	int				j;
 
 	i = 1;
 	while (i < env->argc && env->argv[i][0] == '-' &&
@@ -57,9 +58,9 @@ int			ft_readopts(t_env *env)
 	return (0);
 }
 
-int			ft_readargs(t_env *env)
+int					ft_readargs(t_env *env)
 {
-	int		i;
+	int				i;
 
 	i = 0;
 	while (i < env->argc)
@@ -73,7 +74,7 @@ int			ft_readargs(t_env *env)
 	return (0);
 }
 
-int			ft_readargv(t_env *env)
+int					ft_readargv(t_env *env)
 {
 	if (ft_readopts(env) ||
 		ft_readargs(env))

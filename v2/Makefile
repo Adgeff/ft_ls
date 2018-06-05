@@ -6,7 +6,7 @@
 #    By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/24 17:11:19 by geargenc          #+#    #+#              #
-#    Updated: 2018/05/31 12:14:18 by geargenc         ###   ########.fr        #
+#    Updated: 2018/06/05 18:13:29 by geargenc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,11 @@ CC				= 	gcc
 
 CFLAGS			=	-Wall -Wextra -Werror -I includes
 
-FILES			=	ft_readargv.c\
+FILES			=	ft_cmp.c\
+					ft_merge_sort.c\
+					ft_optset1.c\
+					ft_readarg_f.c\
+					ft_readargv.c\
 					main.c\
 					str_tools.c
 

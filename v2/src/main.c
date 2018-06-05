@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:34:55 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/05 12:53:27 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/06/05 18:34:16 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,73 +24,36 @@ char			*ft_stpcpy(char *dst, char *src)
 	return (dst);
 }
 
-int				ft_addbadarg(t_env *env, char *arg, t_file *file)
+int				ft_addarg(t_file **list, char *arg, char *path, t_file *file)
 {
-	char		*tmp;
-	char		*err;
-
-	err = strerror(errno);
-	if (!(file->name = (char *)malloc(ft_strlen(env->prog_name) +
-		ft_strlen(arg) + ft_strlen(err) + 5)))
+	if (!(file->name = ft_strdup(arg)) ||
+		!(file->path = ft_strdup(path)))
 		return (1);
-	tmp = file->name;
-	tmp = ft_stpcpy(tmp, env->prog_name);
-	tmp = ft_stpcpy(tmp, ": ");
-	tmp = ft_stpcpy(tmp, arg);
-	tmp = ft_stpcpy(tmp, ": ");
-	tmp = ft_stpcpy(tmp, err);
-	file->next = env->badargs;
-	env->badargs = file;
+	file->next = *list;
+	*list = file;
 	return (0);
-}
-
-int				ft_defreadarg(t_env *env, char *arg)
-{
-	t_file		*file;
-	int			errsv;
-
-	if (!(file = (t_file *)malloc(sizeof(t_file))))
-		return (1);
-	if (lstat(arg, &(file->stat)) && ft_addbadarg(env, arg, file))
-		return (1);
-	else if (file->stat.st_mode & S_IFDIR && !(file->name)
-
 }
 
 void			ft_config(t_env *env)
 {
 	env->readarg_f = &ft_defreadarg;
+	env->sort_f = &ft_merge_sort;
+	env->cmp_f = &ft_ascii_cmp;
 	env->badargs = NULL;
 	env->fileargs = NULL;
 	env->dirargs = NULL;
 }
 
-int				ft_topt(t_env *env, char opt)
+void			ft_printlist(t_file *list)
 {
-	(void)opt;
-	(void)env;
-	printf("Lecture option %c\n", opt);
-	return (0);
-}
-
-int				ft_illegalopt(t_env *env, char opt)
-{
-	int			i;
-
-	ft_putstr_fd(2, env->prog_name);
-	ft_putstr_fd(2, ": illegal option -- ");
-	write(2, &opt, 1);
-	ft_putstr_fd(2, "\nusage: ");
-	ft_putstr_fd(2, env->prog_name);
-	ft_putstr_fd(2, " [-");
-	i = 0;
-	while (ft_opttab(i).opt)
+	while (list)
 	{
-		ft_putchar_fd(2, ft_opttab(i).opt);
-		i++;
+		ft_putstr_fd(1, list->name);
+		ft_putstr_fd(1, " -> ");
+		ft_putstr_fd(1, list->path);
+		ft_putstr_fd(1, "\n");
+		list = list->next;
 	}
-	ft_putstr_fd(2, "] [file ...]\n");
-	return (1);
 }
 
 int				ft_ls(t_env *env)
@@ -98,6 +61,18 @@ int				ft_ls(t_env *env)
 	ft_config(env);
 	if (ft_readargv(env))
 		return (1);
+	if (env->badargs)
+		env->badargs = ft_merge_sort(env->badargs, &ft_ascii_cmp);
+	if (env->fileargs)
+		env->fileargs = env->sort_f(env->fileargs, env->cmp_f);
+	if (env->dirargs)
+		env->dirargs = env->sort_f(env->dirargs, env->cmp_f);
+	ft_putstr_fd(1, "Bad args :\n");
+	ft_printlist(env->badargs);
+	ft_putstr_fd(1, "Files :\n");
+	ft_printlist(env->fileargs);
+	ft_putstr_fd(1, "Direrctories :\n");
+	ft_printlist(env->dirargs);
 	return (0);
 }
 
