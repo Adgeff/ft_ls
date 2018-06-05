@@ -6,11 +6,43 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:34:55 by geargenc          #+#    #+#             */
-/*   Updated: 2018/05/31 17:20:25 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/06/05 12:53:27 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+char			*ft_stpcpy(char *dst, char *src)
+{
+	while (*src)
+	{
+		*dst = *src;
+		dst++;
+		src++;
+	}
+	*dst = '\0';
+	return (dst);
+}
+
+int				ft_addbadarg(t_env *env, char *arg, t_file *file)
+{
+	char		*tmp;
+	char		*err;
+
+	err = strerror(errno);
+	if (!(file->name = (char *)malloc(ft_strlen(env->prog_name) +
+		ft_strlen(arg) + ft_strlen(err) + 5)))
+		return (1);
+	tmp = file->name;
+	tmp = ft_stpcpy(tmp, env->prog_name);
+	tmp = ft_stpcpy(tmp, ": ");
+	tmp = ft_stpcpy(tmp, arg);
+	tmp = ft_stpcpy(tmp, ": ");
+	tmp = ft_stpcpy(tmp, err);
+	file->next = env->badargs;
+	env->badargs = file;
+	return (0);
+}
 
 int				ft_defreadarg(t_env *env, char *arg)
 {
@@ -19,8 +51,10 @@ int				ft_defreadarg(t_env *env, char *arg)
 
 	if (!(file = (t_file *)malloc(sizeof(t_file))))
 		return (1);
-	if (lstat(arg, &(file->stat)))
-		ft_filepush(&(env->
+	if (lstat(arg, &(file->stat)) && ft_addbadarg(env, arg, file))
+		return (1);
+	else if (file->stat.st_mode & S_IFDIR && !(file->name)
+
 }
 
 void			ft_config(t_env *env)
