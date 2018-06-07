@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 17:38:04 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/05 18:06:59 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/06/07 19:42:03 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,18 @@ int		ft_illegalopt(t_env *env, char opt)
 {
 	int	i;
 
-	ft_putstr_fd(2, env->prog_name);
-	ft_putstr_fd(2, ": illegal option -- ");
-	write(2, &opt, 1);
-	ft_putstr_fd(2, "\nusage: ");
-	ft_putstr_fd(2, env->prog_name);
-	ft_putstr_fd(2, " [-");
+	ft_fillbuff(env, 2, env->prog_name);
+	ft_fillbuff(env, 2, ": illegal option -- ");
+	ft_fillbuff_c(env, 2, opt);
+	ft_fillbuff(env, 2, "\nusage: ");
+	ft_fillbuff(env, 2, env->prog_name);
+	ft_fillbuff(env, 2, " [-");
 	i = 0;
 	while (ft_opttab(i).opt)
 	{
-		ft_putchar_fd(2, ft_opttab(i).opt);
+		ft_fillbuff_c(env, 2, ft_opttab(i).opt);
 		i++;
 	}
-	ft_putstr_fd(2, "] [file ...]\n");
+	ft_fillbuff(env, 2, "] [file ...]\n");
 	return (1);
 }

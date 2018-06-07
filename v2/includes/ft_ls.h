@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:38:41 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/05 18:34:17 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/06/07 19:43:16 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ typedef struct		s_env
 	char			*prog_name;
 	char			**argv;
 	int				argc;
+	char			buf[BUFF_SIZE];
+	int				fd;
+	size_t			size;
 	t_file			*badargs;
 	t_file			*fileargs;
 	t_file			*dirargs;
@@ -103,5 +106,9 @@ int					ft_illegalopt(t_env *env, char opt);
 
 int					ft_addarg(t_file **list, char *arg,
 					char *path, t_file *file);
+ssize_t				ft_writebuff(t_env *env);
+int					ft_fillbuff_n(t_env *env, int fd, char *str, size_t size);
+int					ft_fillbuff(t_env *env, int fd, char *str);
+int					ft_fillbuff_c(t_env *env, int fd, char c);
 
 #endif
