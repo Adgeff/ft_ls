@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/16 02:32:51 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/05 17:16:35 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/06/08 14:05:06 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,9 @@ t_file		*ft_merge_sort(t_file *list, int (*f)(t_file *, t_file *))
 	if (!list->next)
 		return (list);
 	ft_split_list(&list, &l1, &l2);
-	if (l1)
+	if (l1 && l1->next)
 		l1 = ft_merge_sort_rev(l1, f);
-	if (l2)
+	if (l2 && l2->next)
 		l2 = ft_merge_sort_rev(l2, f);
 	while (l1 && l2)
 	{

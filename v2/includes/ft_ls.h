@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:38:41 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/07 19:43:16 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/06/08 14:30:14 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,12 @@ t_file				*ft_merge_sort(t_file *list,
 					int (*f)(t_file *, t_file *));
 
 /*
+**					ft_no_sort.c
+*/
+
+t_file				*ft_rev_list(t_file *list, int (*f)(t_file *, t_file *));
+
+/*
 **					ft_readarg_f.c
 */
 
@@ -97,6 +103,7 @@ void				ft_putchar_fd(int fd, char c);
 */
 
 int					ft_dopt(t_env *env, char opt);
+int					ft_fopt(t_env *env, char opt);
 int					ft_ropt(t_env *env, char opt);
 int					ft_illegalopt(t_env *env, char opt);
 

@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:34:55 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/07 19:56:53 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/06/08 14:30:30 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void			ft_badargs(t_env *env)
 {
 	t_file		*list;
 
-	env->badargs = ft_merge_sort(env->badargs, &ft_ascii_cmp);
+	env->badargs = ft_rev_list(env->badargs, &ft_ascii_cmp);
 	list = env->badargs;
 	while (list)
 	{
