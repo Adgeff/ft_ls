@@ -6,11 +6,21 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 09:34:31 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/07 19:37:59 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/06/12 13:49:11 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+size_t		ft_strlen(const char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
 
 int			ft_strcmp(const char *s1, const char *s2)
 {

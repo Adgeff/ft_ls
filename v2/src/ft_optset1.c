@@ -6,17 +6,25 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 17:38:04 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/08 14:47:29 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/06/12 18:14:23 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-// int		ft_aopt(t_env *env, char opt)
-// {
-// 	(void)opt;
-// 	return (0);
-// }
+int		ft_bigropt(t_env *env, char opt)
+{
+	(void)opt;
+	env->explore_f = &ft_recursive_explore;
+	return (0);
+}
+
+int		ft_aopt(t_env *env, char opt)
+{
+	(void)opt;
+	env->select_f = &ft_select_all;
+	return (0);
+}
 
 int		ft_dopt(t_env *env, char opt)
 {
@@ -27,8 +35,8 @@ int		ft_dopt(t_env *env, char opt)
 
 int		ft_fopt(t_env *env, char opt)
 {
-	(void)opt;
 	env->sort_f = &ft_rev_list;
+	ft_aopt(env, opt);
 	return (0);
 }
 
