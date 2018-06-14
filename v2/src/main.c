@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:34:55 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/13 18:04:39 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/06/14 19:18:07 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,7 +230,8 @@ int				ft_explore(t_env *env)
 		env->dirtitle_f(env);
 		if (ft_getdir(env))
 			return (1);
-		env->fileargs = env->sort_f(env->fileargs, env->cmp_f);
+		if (env->fileargs)
+			env->fileargs = env->sort_f(env->fileargs, env->cmp_f);
 		env->print_f(env);
 		ft_freelist(env->fileargs);
 		env->fileargs = NULL;

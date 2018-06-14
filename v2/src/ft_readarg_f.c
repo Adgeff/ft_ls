@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 17:43:31 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/12 09:59:28 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/06/14 17:19:33 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 int				ft_defreadarg(t_env *env, char *arg)
 {
 	t_file		*file;
+	char		*name;
 
+	name = ft_strrchr(arg, '/');
+	name = name ? name + 1 : arg;
 	if (!(file = (t_file *)malloc(sizeof(t_file))))
 		return (1);
 	if (lstat(arg, &(file->stat)))
@@ -27,7 +30,7 @@ int				ft_defreadarg(t_env *env, char *arg)
 	else
 	{
 		if ((file->stat.st_mode & S_IFDIR) ?
-			ft_addarg(&(env->dirargs), ft_strdup(arg), ft_strdup(arg), file) :
+			ft_addarg(&(env->dirargs), ft_strdup(name), ft_strdup(arg), file) :
 			ft_addarg(&(env->fileargs), ft_strdup(arg), ft_strdup(arg), file))
 			return (1);
 	}

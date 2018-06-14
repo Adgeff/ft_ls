@@ -6,11 +6,27 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 09:34:31 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/12 13:49:11 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/06/14 16:48:49 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+char		*ft_strrchr(char *str, char c)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	while (str[i] != c)
+	{
+		if (!i)
+			return (NULL);
+		i--;
+	}
+	return (str + i);
+}
 
 size_t		ft_strlen(const char *str)
 {

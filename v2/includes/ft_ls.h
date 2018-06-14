@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:38:41 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/12 18:13:19 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/06/14 16:49:02 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ int						ft_strcmp(const char *s1, const char *s2);
 char					*ft_strdup(const char *str);
 void					ft_putstr_fd(int fd, char *str);
 void					ft_putchar_fd(int fd, char c);
+char					*ft_strrchr(char *str, char c);
 
 /*
 **						options
