@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:34:55 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/12 18:12:11 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/06/13 18:04:39 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,18 +57,6 @@ void			ft_config(t_env *env)
 	env->badargs = NULL;
 	env->fileargs = NULL;
 	env->dirargs = NULL;
-}
-
-void			ft_printlist(t_env *env, t_file *list)
-{
-	while (list)
-	{
-		ft_fillbuff(env, 1, list->name);
-		ft_fillbuff(env, 1, " -> ");
-		ft_fillbuff(env, 1, list->path);
-		ft_fillbuff(env, 1, "\n");
-		list = list->next;
-	}
 }
 
 ssize_t			ft_writebuff(t_env *env)
@@ -193,6 +181,19 @@ char			*ft_getpath(char *dir_path, char *name)
 	return (path);
 }
 
+void			ft_direrror(t_env *env)
+{
+	char		*error;
+
+	error = strerror(errno);
+	ft_fillbuff(env, 2, env->prog_name);
+	ft_fillbuff(env, 2, ": ");
+	ft_fillbuff(env, 2, env->dirargs->name);
+	ft_fillbuff(env, 2, ": ");
+	ft_fillbuff(env, 2, error);
+	ft_fillbuff_c(env, 2, '\n');
+}
+
 int				ft_getdir(t_env *env)
 {
 	DIR			*dir_ptr;
@@ -200,7 +201,10 @@ int				ft_getdir(t_env *env)
 	t_file		*file;
 
 	if (!(dir_ptr = opendir(env->dirargs->path)))
+	{
+		ft_direrror(env);
 		return (0);
+	}
 	while ((file_ptr = readdir(dir_ptr)))
 	{
 		if (env->select_f(file_ptr->d_name))
