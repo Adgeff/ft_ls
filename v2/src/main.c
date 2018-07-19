@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:34:55 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/14 19:18:07 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/07/19 15:16:57 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,15 @@ void			ft_print_oebl(t_env *env)
 		list = list->next;
 	}
 }
+
+// void			ft_print_long(t_env *env)
+// {
+// 	t_file		*list;
+// 	t_szdt		max;
+// 	int			i;
+
+
+// }
 
 void			ft_fileargs(t_env *env)
 {

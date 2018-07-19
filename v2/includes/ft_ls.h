@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:38:41 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/14 16:49:02 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/07/19 15:16:33 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,19 @@
 
 typedef struct dirent	t_dirent;
 
+typedef struct			s_szdt
+{
+	int					nlink;
+	int					uid;
+	int					gid;
+	int					size;
+}						t_szdt;
+
 typedef struct			s_file
 {
 	char				*name;
 	char				*path;
+	t_szdt				szdt;
 	struct stat			stat;
 	struct s_file		*next;
 }						t_file;
