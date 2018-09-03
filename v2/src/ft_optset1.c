@@ -6,11 +6,18 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 17:38:04 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/12 18:14:23 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/03 16:02:50 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+int		ft_bigaopt(t_env *env, char opt)
+{
+	(void)opt;
+	env->select_f = &ft_nodot_select;
+	return (0);
+}
 
 int		ft_bigropt(t_env *env, char opt)
 {
@@ -19,10 +26,24 @@ int		ft_bigropt(t_env *env, char opt)
 	return (0);
 }
 
+int		ft_biguopt(t_env *env, char opt)
+{
+	(void)opt;
+	env->gettime_f = &ft_getbirthtime;
+	return (0);
+}
+
 int		ft_aopt(t_env *env, char opt)
 {
 	(void)opt;
 	env->select_f = &ft_select_all;
+	return (0);
+}
+
+int		ft_copt(t_env *env, char opt)
+{
+	(void)opt;
+	env->gettime_f = &ft_getctime;
 	return (0);
 }
 
@@ -40,10 +61,31 @@ int		ft_fopt(t_env *env, char opt)
 	return (0);
 }
 
+int		ft_mopt(t_env *env, char opt)
+{
+	(void)opt;
+	env->print_f = &ft_print_comma;
+	return (0);
+}
+
 int		ft_ropt(t_env *env, char opt)
 {
 	(void)opt;
 	env->sort_f = &ft_merge_sort_rev;
+	return (0);
+}
+
+int		ft_topt(t_env *env, char opt)
+{
+	(void)opt;
+	env->cmp_f = &ft_time_cmp;
+	return (0);
+}
+
+int		ft_uopt(t_env *env, char opt)
+{
+	(void)opt;
+	env->gettime_f = &ft_getatime;
 	return (0);
 }
 

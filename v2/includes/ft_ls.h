@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:38:41 by geargenc          #+#    #+#             */
-/*   Updated: 2018/07/19 15:16:33 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/03 16:01:36 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,23 @@
 # include <sys/types.h>
 # include <errno.h>
 # include <dirent.h>
+# include <time.h>
 
 typedef struct dirent	t_dirent;
 
-typedef struct			s_szdt
+typedef struct			s_vsize
 {
-	int					nlink;
+	int					lnnum;
 	int					uid;
 	int					gid;
 	int					size;
-}						t_szdt;
+}						t_vsize;
 
 typedef struct			s_file
 {
 	char				*name;
 	char				*path;
-	t_szdt				szdt;
+	t_vsize				vsize;
 	struct stat			stat;
 	struct s_file		*next;
 }						t_file;
@@ -56,12 +57,14 @@ typedef struct			s_env
 	t_file				*fileargs;
 	t_file				*dirargs;
 	int					(*readarg_f)(struct s_env *, char *);
-	t_file				*(*sort_f)(t_file *list, int (*f)(t_file *, t_file *));
-	int					(*cmp_f)(t_file *, t_file *);
+	t_file				*(*sort_f)(struct s_env *, t_file *,
+						int (*)(struct s_env *, t_file *, t_file *));
+	int					(*cmp_f)(struct s_env *, t_file *, t_file *);
 	void				(*print_f)(struct s_env *env);
 	int					(*explore_f)(struct s_env *env);
 	void				(*dirtitle_f)(struct s_env *env);
 	int					(*select_f)(const char *file_name);
+	time_t				(*gettime_f)(struct stat *stat);
 }						t_env;
 
 typedef struct			s_opt
@@ -74,23 +77,25 @@ typedef struct			s_opt
 **						ft_comp.c
 */
 
-int						ft_ascii_cmp(t_file *l1, t_file *l2);
+int						ft_ascii_cmp(t_env *env, t_file *l1, t_file *l2);
+int						ft_time_cmp(t_env *env, t_file *l1, t_file *l2);
+
 
 /*
 **						ft_merge_sort.c
 */
 
-t_file					*ft_merge_sort_rev(t_file *list,
-						int (*f)(t_file *, t_file *));
-t_file					*ft_merge_sort(t_file *list,
-						int (*f)(t_file *, t_file *));
+t_file					*ft_merge_sort_rev(t_env *env, t_file *list,
+						int (*cmp)(t_env *, t_file *, t_file *));
+t_file					*ft_merge_sort(t_env *env, t_file *list,
+						int (*cmp)(t_env *, t_file *, t_file *));
 
 /*
 **						ft_no_sort.c
 */
 
-t_file					*ft_rev_list(t_file *list,
-						int (*f)(t_file *, t_file *));
+t_file					*ft_rev_list(t_env *env, t_file *list,
+						int (*cmp)(t_env *, t_file *, t_file *));
 
 /*
 **						ft_readarg_f.c
@@ -121,11 +126,17 @@ char					*ft_strrchr(char *str, char c);
 **						options
 */
 
+int						ft_bigaopt(t_env *env, char opt);
 int						ft_bigropt(t_env *env, char opt);
+int						ft_biguopt(t_env *env, char opt);
 int						ft_aopt(t_env *env, char opt);
+int						ft_copt(t_env *env, char opt);
 int						ft_dopt(t_env *env, char opt);
 int						ft_fopt(t_env *env, char opt);
+int						ft_mopt(t_env *env, char opt);
 int						ft_ropt(t_env *env, char opt);
+int						ft_topt(t_env *env, char opt);
+int						ft_uopt(t_env *env, char opt);
 int						ft_illegalopt(t_env *env, char opt);
 
 /*
@@ -140,8 +151,15 @@ ssize_t					ft_fillbuff_n(t_env *env, int fd, char *str,
 ssize_t					ft_fillbuff(t_env *env, int fd, char *str);
 ssize_t					ft_fillbuff_c(t_env *env, int fd, char c);
 void					ft_print_oebl(t_env *env);
+void					ft_print_comma(t_env *env);
 int						ft_explore(t_env *env);
+int						ft_nohidden_select(const char *file_name);
 int						ft_select_all(const char *file_name);
+int						ft_nodot_select(const char *file_name);
 int						ft_recursive_explore(t_env *env);
+time_t					ft_getbirthtime(struct stat *stat);
+time_t					ft_getatime(struct stat *stat);
+time_t					ft_getmtime(struct stat *stat);
+time_t					ft_getctime(struct stat *stat);
 
 #endif

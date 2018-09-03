@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/16 02:32:51 by geargenc          #+#    #+#             */
-/*   Updated: 2018/06/08 14:05:06 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/03 12:06:05 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ void		ft_moveone_to(t_file **from, t_file **to)
 	*from = tmp;
 }
 
-t_file		*ft_merge_sort_rev(t_file *list, int (*f)(t_file *, t_file *))
+t_file		*ft_merge_sort_rev(t_env *env, t_file *list,
+			int (*cmp)(t_env *, t_file *, t_file *))
 {
 	t_file	*l1;
 	t_file	*l2;
@@ -62,12 +63,12 @@ t_file		*ft_merge_sort_rev(t_file *list, int (*f)(t_file *, t_file *))
 		return (list);
 	ft_split_list(&list, &l1, &l2);
 	if (l1 && l1->next)
-		l1 = ft_merge_sort(l1, f);
+		l1 = ft_merge_sort(env, l1, cmp);
 	if (l2 && l2->next)
-		l2 = ft_merge_sort(l2, f);
+		l2 = ft_merge_sort(env, l2, cmp);
 	while (l1 && l2)
 	{
-		if (f(l1, l2) > 0)
+		if (cmp(env, l1, l2) > 0)
 			ft_moveone_to(&l2, &list);
 		else
 			ft_moveone_to(&l1, &list);
@@ -77,7 +78,8 @@ t_file		*ft_merge_sort_rev(t_file *list, int (*f)(t_file *, t_file *))
 	return (list);
 }
 
-t_file		*ft_merge_sort(t_file *list, int (*f)(t_file *, t_file *))
+t_file		*ft_merge_sort(t_env *env, t_file *list,
+			int (*cmp)(t_env *, t_file *, t_file *))
 {
 	t_file	*l1;
 	t_file	*l2;
@@ -86,12 +88,12 @@ t_file		*ft_merge_sort(t_file *list, int (*f)(t_file *, t_file *))
 		return (list);
 	ft_split_list(&list, &l1, &l2);
 	if (l1 && l1->next)
-		l1 = ft_merge_sort_rev(l1, f);
+		l1 = ft_merge_sort_rev(env, l1, cmp);
 	if (l2 && l2->next)
-		l2 = ft_merge_sort_rev(l2, f);
+		l2 = ft_merge_sort_rev(env, l2, cmp);
 	while (l1 && l2)
 	{
-		if (f(l1, l2) < 0)
+		if (cmp(env, l1, l2) < 0)
 			ft_moveone_to(&l2, &list);
 		else
 			ft_moveone_to(&l1, &list);

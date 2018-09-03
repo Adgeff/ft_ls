@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:34:55 by geargenc          #+#    #+#             */
-/*   Updated: 2018/07/19 15:16:57 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/03 16:06:31 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,20 @@ int				ft_addarg(t_file **list, char *arg, char *path, t_file *file)
 	return (0);
 }
 
+int				ft_nohidden_select(const char *file_name)
+{
+	return (file_name[0] != '.');
+}
+
 int				ft_select_all(const char *file_name)
 {
 	(void)file_name;
 	return (1);
 }
 
-int				ft_nohidden_select(const char *file_name)
+int				ft_nodot_select(const char *file_name)
 {
-	return (file_name[0] != '.');
+	return (ft_strcmp(file_name, ".") && ft_strcmp(file_name, ".."));
 }
 
 void			ft_config(t_env *env)
@@ -54,9 +59,30 @@ void			ft_config(t_env *env)
 	env->print_f = &ft_print_oebl;
 	env->explore_f = &ft_explore;
 	env->select_f = &ft_nohidden_select;
+	env->gettime_f = &ft_getmtime;
 	env->badargs = NULL;
 	env->fileargs = NULL;
 	env->dirargs = NULL;
+}
+
+time_t			ft_getbirthtime(struct stat *stat)
+{
+	return (stat->st_birthtime);
+}
+
+time_t			ft_getatime(struct stat *stat)
+{
+	return (stat->st_atime);
+}
+
+time_t			ft_getmtime(struct stat *stat)
+{
+	return (stat->st_mtime);
+}
+
+time_t			ft_getctime(struct stat *stat)
+{
+	return (stat->st_ctime);
 }
 
 ssize_t			ft_writebuff(t_env *env)
@@ -125,7 +151,7 @@ void			ft_badargs(t_env *env)
 {
 	t_file		*list;
 
-	env->badargs = ft_rev_list(env->badargs, &ft_ascii_cmp);
+	env->badargs = ft_rev_list(env, env->badargs, &ft_ascii_cmp);
 	list = env->badargs;
 	while (list)
 	{
@@ -154,6 +180,21 @@ void			ft_print_oebl(t_env *env)
 	}
 }
 
+void			ft_print_comma(t_env *env)
+{
+	t_file		*list;
+
+	list = env->fileargs;
+	while (list)
+	{
+		ft_fillbuff(env, 1, list->name);
+		if (list->next)
+			ft_fillbuff(env, 1, ", ");
+		list = list->next;
+	}
+	ft_fillbuff_c(env, 1, '\n');
+}
+
 // void			ft_print_long(t_env *env)
 // {
 // 	t_file		*list;
@@ -165,7 +206,7 @@ void			ft_print_oebl(t_env *env)
 
 void			ft_fileargs(t_env *env)
 {
-	env->fileargs = env->sort_f(env->fileargs, env->cmp_f);
+	env->fileargs = env->sort_f(env, env->fileargs, env->cmp_f);
 	env->print_f(env);
 	ft_freelist(env->fileargs);
 	env->fileargs = NULL;
@@ -233,14 +274,14 @@ int				ft_explore(t_env *env)
 {
 	t_file		*tmp;
 
-	env->dirargs = env->sort_f(env->dirargs, env->cmp_f);
+	env->dirargs = env->sort_f(env, env->dirargs, env->cmp_f);
 	while (env->dirargs)
 	{
 		env->dirtitle_f(env);
 		if (ft_getdir(env))
 			return (1);
 		if (env->fileargs)
-			env->fileargs = env->sort_f(env->fileargs, env->cmp_f);
+			env->fileargs = env->sort_f(env, env->fileargs, env->cmp_f);
 		env->print_f(env);
 		ft_freelist(env->fileargs);
 		env->fileargs = NULL;
@@ -277,14 +318,14 @@ int				ft_recursive_explore(t_env *env)
 {
 	t_file		*tmp;
 
-	env->dirargs = env->sort_f(env->dirargs, env->cmp_f);
+	env->dirargs = env->sort_f(env, env->dirargs, env->cmp_f);
 	while (env->dirargs)
 	{
 		env->dirtitle_f(env);
 		if (ft_getdir(env))
 			return (1);
 		if (env->fileargs)
-			env->fileargs = env->sort_f(env->fileargs, env->cmp_f);
+			env->fileargs = env->sort_f(env, env->fileargs, env->cmp_f);
 		env->print_f(env);
 		tmp = env->dirargs;
 		env->dirargs = env->dirargs->next;
