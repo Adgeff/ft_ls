@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:38:41 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/03 16:01:36 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/06 21:53:52 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,16 @@ typedef struct			s_opt
 */
 
 int						ft_ascii_cmp(t_env *env, t_file *l1, t_file *l2);
+int						ft_size_cmp(t_env *env, t_file *l1, t_file *l2);
 int						ft_time_cmp(t_env *env, t_file *l1, t_file *l2);
 
+/*
+**						ft_exeperm.c
+*/
+
+char					ft_uidexe(mode_t mode);
+char					ft_gidexe(mode_t mode);
+char					ft_othersexe(mode_t mode);
 
 /*
 **						ft_merge_sort.c
@@ -98,6 +106,34 @@ t_file					*ft_rev_list(t_env *env, t_file *list,
 						int (*cmp)(t_env *, t_file *, t_file *));
 
 /*
+**						options
+*/
+
+int						ft_bigaopt(t_env *env, char opt);
+int						ft_bigropt(t_env *env, char opt);
+int						ft_bigsopt(t_env *env, char opt);
+int						ft_biguopt(t_env *env, char opt);
+int						ft_aopt(t_env *env, char opt);
+int						ft_copt(t_env *env, char opt);
+int						ft_dopt(t_env *env, char opt);
+int						ft_fopt(t_env *env, char opt);
+int						ft_mopt(t_env *env, char opt);
+int						ft_ropt(t_env *env, char opt);
+int						ft_topt(t_env *env, char opt);
+int						ft_uopt(t_env *env, char opt);
+int						ft_illegalopt(t_env *env, char opt);
+
+/*
+**						ft_permtabs.c
+*/
+
+char					ft_getperm(int i, mode_t mode);
+char					ft_uidgidexetab(int i);
+char					ft_othersexetab(int i);
+char					ft_readtab(int i);
+char					ft_writetab(int i);
+
+/*
 **						ft_readarg_f.c
 */
 
@@ -112,6 +148,22 @@ t_opt					ft_opttab(int i);
 int						ft_readargv(t_env *env);
 
 /*
+**						ft_readperm.c
+*/
+
+char					ft_uidread(mode_t mode);
+char					ft_gidread(mode_t mode);
+char					ft_othersread(mode_t mode);
+
+/*
+**						ft_writeperm.c
+*/
+
+char					ft_uidwrite(mode_t mode);
+char					ft_gidwrite(mode_t mode);
+char					ft_otherswrite(mode_t mode);
+
+/*
 **						str_tools.c
 */
 
@@ -121,23 +173,6 @@ char					*ft_strdup(const char *str);
 void					ft_putstr_fd(int fd, char *str);
 void					ft_putchar_fd(int fd, char c);
 char					*ft_strrchr(char *str, char c);
-
-/*
-**						options
-*/
-
-int						ft_bigaopt(t_env *env, char opt);
-int						ft_bigropt(t_env *env, char opt);
-int						ft_biguopt(t_env *env, char opt);
-int						ft_aopt(t_env *env, char opt);
-int						ft_copt(t_env *env, char opt);
-int						ft_dopt(t_env *env, char opt);
-int						ft_fopt(t_env *env, char opt);
-int						ft_mopt(t_env *env, char opt);
-int						ft_ropt(t_env *env, char opt);
-int						ft_topt(t_env *env, char opt);
-int						ft_uopt(t_env *env, char opt);
-int						ft_illegalopt(t_env *env, char opt);
 
 /*
 **						others

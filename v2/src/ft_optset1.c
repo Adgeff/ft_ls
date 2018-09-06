@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 17:38:04 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/03 16:02:50 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/06 21:53:55 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,13 @@ int		ft_bigropt(t_env *env, char opt)
 {
 	(void)opt;
 	env->explore_f = &ft_recursive_explore;
+	return (0);
+}
+
+int		ft_bigsopt(t_env *env, char opt)
+{
+	(void)opt;
+	env->cmp_f = &ft_size_cmp;
 	return (0);
 }
 

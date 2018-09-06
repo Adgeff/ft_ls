@@ -6,7 +6,7 @@
 #    By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/24 17:11:19 by geargenc          #+#    #+#              #
-#    Updated: 2018/06/08 14:23:25 by geargenc         ###   ########.fr        #
+#    Updated: 2018/09/06 21:53:41 by geargenc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,11 +19,15 @@ CC				= 	gcc
 CFLAGS			=	-Wall -Wextra -Werror -I includes
 
 FILES			=	ft_cmp.c\
+					ft_exeperm.c\
 					ft_merge_sort.c\
 					ft_no_sort.c\
 					ft_optset1.c\
+					ft_permtabs.c\
 					ft_readarg_f.c\
 					ft_readargv.c\
+					ft_readperm.c\
+					ft_writeperm.c\
 					main.c\
 					str_tools.c
 

@@ -6,11 +6,42 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:34:55 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/03 16:06:31 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/06 21:54:55 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+typedef struct	s_ftype
+{
+	char		lprint;
+	char		*(*color_f)(mode_t);
+	char		*(*suffix_f)(mode_t);
+}				t_ftype;
+
+/*t_ftype			*ft_ftypetab(int i)
+{
+	struct t_ftype	ftypetab[] =
+	{
+		{NULL, NULL, NULL},
+		{'p', &ft_fifocolor, &ft_fifosuffix},
+		{'c', &ft_chrcolor, &ft_chrsuffix},
+		{NULL, NULL, NULL},
+		{'d', &ft_dircolor, &ft_dirsuffix},
+		{NULL, NULL, NULL},
+		{'b', &ft_chrcolor, &ft_chrsuffix},
+		{NULL, NULL, NULL},
+		{'-', &ft_regcolor, &ft_regsuffix},
+		{NULL, NULL, NULL},
+		{'l', &ft_lnkcolor, &lnksuffix},
+		{NULL, NULL, NULL},
+		{'s', &ft_sockcolor, &ft_socksuffix},
+		{NULL, NULL, NULL},
+		{'-', &ft_whtcolor, &ft_whtsuffix}
+	}
+
+	return (ftypetab[i]);
+}*/
 
 char			*ft_stpcpy(char *dst, char *src)
 {
@@ -167,6 +198,18 @@ void			ft_badargs(t_env *env)
 	env->badargs = NULL;
 }
 
+void			ft_getperms(t_env *env, mode_t mode)
+{
+	int			i;
+
+	i = 0;
+	while (i < 9)
+	{
+		ft_fillbuff_c(env, 1, ft_getperm(i, mode));
+		i++;
+	}
+}
+
 void			ft_print_oebl(t_env *env)
 {
 	t_file		*list;
@@ -174,6 +217,8 @@ void			ft_print_oebl(t_env *env)
 	list = env->fileargs;
 	while (list)
 	{
+		ft_getperms(env, list->stat.st_mode);
+		ft_fillbuff_c(env, 1, ' ');
 		ft_fillbuff(env, 1, list->name);
 		ft_fillbuff_c(env, 1, '\n');
 		list = list->next;
@@ -190,9 +235,10 @@ void			ft_print_comma(t_env *env)
 		ft_fillbuff(env, 1, list->name);
 		if (list->next)
 			ft_fillbuff(env, 1, ", ");
+		else
+			ft_fillbuff_c(env, 1, '\n');
 		list = list->next;
 	}
-	ft_fillbuff_c(env, 1, '\n');
 }
 
 // void			ft_print_long(t_env *env)
