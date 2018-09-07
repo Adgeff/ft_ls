@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:38:41 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/06 21:53:52 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/07 16:23:54 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct			s_env
 	char				buf[BUFF_SIZE];
 	int					fd;
 	ssize_t				size;
+	char				*colorcode;
 	t_file				*badargs;
 	t_file				*fileargs;
 	t_file				*dirargs;

@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:34:55 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/06 21:54:55 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/07 16:55:13 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,33 +15,200 @@
 typedef struct	s_ftype
 {
 	char		lprint;
-	char		*(*color_f)(mode_t);
-	char		*(*suffix_f)(mode_t);
+	char		**(*color_f)(t_env *env, mode_t);
+	char		*(*colorend_f)(t_env *env, mode_t);
+	char		*(*suffix_f)(t_env *env, mode_t);
+	void		(*size_f)(t_env *env, t_file *file);
 }				t_ftype;
 
-/*t_ftype			*ft_ftypetab(int i)
+typedef struct	s_colorcode
+{
+	char		entrytype;
+	char		*foreground;
+	char		*background;
+}				t_colorcode;
+
+typedef struct	s_color
+{
+	char		*foreground;
+	char		*background;
+	char		*end;
+}				t_color;
+
+t_colorcode				*ft_colorcode(void)
+{
+	static t_colorcode	colorcode[] = {
+		{'a', "\033[30m", "\033[40m"},
+		{'b', "\033[31m", "\033[41m"},
+		{'c', "\033[32m", "\033[42m"},
+		{'d', "\033[33m", "\033[43m"},
+		{'e', "\033[34m", "\033[44m"},
+		{'f', "\033[35m", "\033[45m"},
+		{'g', "\033[36m", "\033[46m"},
+		{'h', "\033[37m", "\033[47m"},
+		{'A', "\033[1;30m", "\033[1;40m"},
+		{'B', "\033[1;31m", "\033[1;41m"},
+		{'C', "\033[1;32m", "\033[1;42m"},
+		{'D', "\033[1;33m", "\033[1;43m"},
+		{'E', "\033[1;34m", "\033[1;44m"},
+		{'F', "\033[1;35m", "\033[1;45m"},
+		{'G', "\033[1;36m", "\033[1;46m"},
+		{'H', "\033[1;37m", "\033[1;47m"},
+		{'x', "", ""}
+	};
+
+	return (colorcode);
+}
+
+char			*ft_getfor(t_env *env, int type)
+{
+	int			i;
+
+	i = 0;
+	while (ft_colorcode()[i].entrytype != env->colorcode[(type - 1) * 2])
+		i++;
+	return (ft_colorcode()[i].foreground);
+}
+
+char			*ft_getback(t_env *env, int type)
+{
+	int			i;
+
+	i = 0;
+	while (ft_colorcode()[i].entrytype != env->colorcode[(type - 1) * 2 + 1])
+		i++;
+	return (ft_colorcode()[i].background);
+}
+
+char			**ft_fifocolor(t_env *env, mode_t mode)
+{
+	static t_color	all = {ft_getfor(env, 4), ft_getback(env, 4),
+		(all.foreground[0] | all.background[0]) ? "\033[0m" : ""};
+
+	(void)mode;
+	return (all);
+}
+
+char			**ft_chrcolor(t_env *env, mode_t mode)
+{
+	static char	all[3][] = {ft_getfor(env, 7), ft_getback(env, 7),
+		(all[0][0] | all[1][0]) ? "\033[0m" : "")};
+
+	(void)mode;
+	return (all);
+}
+
+char			**ft_dircolor(t_env *env, mode_t mode)
+{
+	static char	nw[3][] = {ft_getfor(env, 1), ft_getback(env, 1),
+		(nw[0][0] | nw[1][0]) ? "\033[0m" : "")};
+	static char	ws[3][] = {ft_getfor(env, 10), ft_getback(env, 10),
+		(ws[0][0] | ws[1][0]) ? "\033[0m" : "")};
+	static char	wns[3][] = {ft_getfor(env, 11), ft_getback(env, 11),
+		(wns[0][0] | wns[1][0]) ? "\033[0m" : "")};
+
+	if (mode & (S_ISVTX | S_IWOTH))
+		return (ws);
+	else if (mode & S_IWOTH)
+		return (wns);
+	else
+		return (nw);
+}
+
+char			**ft_blkcolor(t_env *env, mode_t mode)
+{
+	static char	all[3][] = {ft_getfor(env, 6), ft_getback(env, 6),
+		(all[0][0] | all[1][0]) ? "\033[0m" : "")};
+
+	(void)mode;
+	return (all);
+}
+
+char			**ft_regcolor(t_env *env, mode_t mode)
+{
+	static char	exe[3][] = {ft_getfor(env, 5), ft_getback(env, 5),
+		(exe[0][0] | exe[1][0]) ? "\033[0m" : "")};
+	static char	exeuid[3][] = {ft_getfor(env, 8), ft_getback(env, 8),
+		(exeuid[0][0] | exeuid[1][0]) ? "\033[0m" : "")};
+	static char	exegid[3][] = {ft_getfor(env, 9), ft_getback(env, 9),
+		(exegid[0][0] | exegid[1][0]) ? "\033[0m" : "")};
+	static char	nexe[3][] = {"", "", ""};
+
+	if (mode & 0111)
+	{
+		if (mode & S_ISUID)
+			return (exeuid);
+		else if (mode & S_ISGID)
+			return (exegid);
+		else
+			return (exe);
+	}
+	else
+		return (nexe);
+}
+
+char			**ft_lnkcolor(t_env *env, mode_t mode)
+{
+	static char	all[3][] = {ft_getfor(env, 2), ft_getback(env, 2),
+		(all[0][0] | all[1][0]) ? "\033[0m" : "")};
+
+	(void)mode;
+	return (all);
+}
+
+char			**ft_sockcolor(t_env *env, mode_t mode)
+{
+	static char	all[3][] = {ft_getfor(env, 3), ft_getback(env, 3),
+		(all[0][0] | all[1][0]) ? "\033[0m" : "")};
+
+	(void)mode;
+	return (all);
+}
+
+char			**ft_whtcolor(t_env *env, mode_t mode)
+{
+	static char	all[3][] = {"", "", ""};
+
+	(void)env;
+	(void)mode;
+	return (all);
+}
+
+void			ft_octsize(t_env *env, t_file *file)
+{
+	(void)env;
+	(void)file;
+}
+
+void			ft_majmin(t_env *env, t_file *file)
+{
+	(void)env;
+	(void)file;
+}
+
+t_ftype			*ft_ftypetab(int i)
 {
 	struct t_ftype	ftypetab[] =
 	{
-		{NULL, NULL, NULL},
-		{'p', &ft_fifocolor, &ft_fifosuffix},
-		{'c', &ft_chrcolor, &ft_chrsuffix},
-		{NULL, NULL, NULL},
-		{'d', &ft_dircolor, &ft_dirsuffix},
-		{NULL, NULL, NULL},
-		{'b', &ft_chrcolor, &ft_chrsuffix},
-		{NULL, NULL, NULL},
-		{'-', &ft_regcolor, &ft_regsuffix},
-		{NULL, NULL, NULL},
-		{'l', &ft_lnkcolor, &lnksuffix},
-		{NULL, NULL, NULL},
-		{'s', &ft_sockcolor, &ft_socksuffix},
-		{NULL, NULL, NULL},
-		{'-', &ft_whtcolor, &ft_whtsuffix}
+		{NULL, NULL, NULL, NULL, NULL},
+//		{'p', &ft_fifocolor, &ft_fifocolorend, &ft_fifosuffix, &ft_octsize},
+//		{'c', &ft_chrcolor, &ft_chrcolorend, &ft_chrsuffix, &ft_majmin},
+		{NULL, NULL, NULL, NULL, NULL},
+//		{'d', &ft_dircolor, &ft_dircolorend, &ft_dirsuffix, &ft_octsize},
+		{NULL, NULL, NULL, NULL, NULL},
+//		{'b', &ft_blkcolor, &ft_blkcolorend, &ft_blksuffix, &ft_majmin},
+		{NULL, NULL, NULL, NULL, NULL},
+//		{'-', &ft_regcolor, &ft_regcolorend, &ft_regsuffix, &ft_octsize},
+		{NULL, NULL, NULL, NULL, NULL},
+//		{'l', &ft_lnkcolor, &ft_lnkcolorend, &lnksuffix, &ft_octsize},
+		{NULL, NULL, NULL, NULL, NULL},
+//		{'s', &ft_sockcolor, &ft_sockcolorend, &ft_socksuffix, &ft_octsize},
+		{NULL, NULL, NULL, NULL, NULL},
+//		{'-', &ft_whtcolor, &ft_whtcolorend, &ft_whtsuffix, &ft_octsize}
 	}
 
 	return (ftypetab[i]);
-}*/
+}
 
 char			*ft_stpcpy(char *dst, char *src)
 {
@@ -91,6 +258,7 @@ void			ft_config(t_env *env)
 	env->explore_f = &ft_explore;
 	env->select_f = &ft_nohidden_select;
 	env->gettime_f = &ft_getmtime;
+	env->colorcode = "exfxcxdxbxegedabagacad";
 	env->badargs = NULL;
 	env->fileargs = NULL;
 	env->dirargs = NULL;
