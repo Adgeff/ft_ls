@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:38:41 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/07 16:23:54 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/09 22:30:02 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include <errno.h>
 # include <dirent.h>
 # include <time.h>
+
+# define DEF_COLORCODE "exfxcxdxbxegedabagacad"
 
 typedef struct dirent	t_dirent;
 
@@ -53,6 +55,10 @@ typedef struct			s_env
 	char				buf[BUFF_SIZE];
 	int					fd;
 	ssize_t				size;
+	int					total;
+	int					normal_mask;
+	int					long_mask;
+	char				***colortab;
 	char				*colorcode;
 	t_file				*badargs;
 	t_file				*fileargs;
@@ -66,6 +72,7 @@ typedef struct			s_env
 	void				(*dirtitle_f)(struct s_env *env);
 	int					(*select_f)(const char *file_name);
 	time_t				(*gettime_f)(struct stat *stat);
+	char				*(*getsuffix_f)(mode_t);
 }						t_env;
 
 typedef struct			s_opt
