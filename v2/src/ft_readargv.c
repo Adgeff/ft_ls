@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 12:13:10 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/06 21:53:54 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/11 21:14:03 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ t_opt				ft_opttab(int i)
 {
 	static t_opt	opttab[] = {
 		{'A', &ft_bigaopt},
+		{'F', &ft_bigfopt},
+		{'G', &ft_biggopt},
 		{'R', &ft_bigropt},
 		{'S', &ft_bigsopt},
 		{'U', &ft_biguopt},
@@ -23,7 +25,9 @@ t_opt				ft_opttab(int i)
 		{'c', &ft_copt},
 		{'d', &ft_dopt},
 		{'f', &ft_fopt},
+		{'i', &ft_iopt},
 		{'m', &ft_mopt},
+		{'p', &ft_popt},
 		{'r', &ft_ropt},
 		{'t', &ft_topt},
 		{'u', &ft_uopt},

@@ -6,27 +6,11 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:34:55 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/09 22:32:43 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/11 21:16:54 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-
-typedef struct	s_ftype
-{
-	char		lprint;
-	char		**(*color_f)(t_env *env, mode_t);
-	char		*(*suffixbigf_f)(mode_t);
-	char		*(*suffixp_f)(mode_t);
-	void		(*size_f)(t_env *env, t_file *file);
-}				t_ftype;
-
-typedef struct	s_colorcode
-{
-	char		charcode;
-	char		*foreground;
-	char		*background;
-}				t_colorcode;
 
 t_colorcode				ft_colorcode(int i)
 {
@@ -78,6 +62,8 @@ int				ft_check_colorcode(char *colorcode)
 {
 	int			i;
 
+	if (!colorcode)
+		return (1);
 	i = 0;
 	while (colorcode[i])
 		i++;
@@ -107,6 +93,7 @@ int				ft_init_colortab(t_env *env)
 	{
 		if (!(env->colortab[i] = (char **)malloc(3 * sizeof(char *))))
 			return (1);
+		i++;
 	}
 	return (0);
 }
@@ -135,33 +122,7 @@ int				ft_config_colors(t_env *env)
 	return (0);
 }
 
-int				ft_biggopt(t_env *env, char opt)
-{
-	if (ft_config_colors(env))
-		return (1);
-	env->normal_mask = env->normal_mask | 0x0000000a;
-	env->long_mask = env->long_mask | 0x00000014;
-	(void)opt;
-	return (0);
-}
 
-int				ft_bigfopt(t_env *env, char opt)
-{
-	env->getsuffix_f = &ft_getsuffixbigf;
-	env->normal_mask = env->normal_mask | 0x00000001;
-	env->long_mask = env->long_mask | 0x00000002;
-	(void)opt;
-	return (0);
-}
-
-int				ft_popt(t_env *env, char opt)
-{
-	env->getsuffix_f = &ft_getsuffixp;
-	env->normal_mask = env->normal_mask | 0x00000001;
-	env->long_mask = env->long_mask | 0x00000002;
-	(void)opt;
-	return (0);
-}
 
 char			*ft_emptystr(mode_t mode)
 {
@@ -175,7 +136,7 @@ char			**ft_fifocolor(t_env *env, mode_t mode)
 	return (env->colortab[4]);
 }
 
-char			*ft_fifosuffixbigf(mode_t mode)
+char			*ft_fifosuffix(mode_t mode)
 {
 	static char	*all = "|";
 
@@ -199,15 +160,7 @@ char			**ft_dircolor(t_env *env, mode_t mode)
 		return (env->colortab[1]);
 }
 
-char			*ft_dirsuffixbigf(mode_t mode)
-{
-	static char	*all = "/";
-
-	(void)mode;
-	return (all);
-}
-
-char			*ft_dirsuffixp(mode_t mode)
+char			*ft_dirsuffix(mode_t mode)
 {
 	static char	*all = "/";
 
@@ -236,7 +189,7 @@ char			**ft_regcolor(t_env *env, mode_t mode)
 		return (env->colortab[0]);
 }
 
-char			*ft_regsuffixbigf(mode_t mode)
+char			*ft_regsuffix(mode_t mode)
 {
 	static char	*exe = "*";
 	static char	*nexe = "";
@@ -253,7 +206,7 @@ char			**ft_lnkcolor(t_env *env, mode_t mode)
 	return (env->colortab[2]);
 }
 
-char			*ft_lnksuffixbigf(mode_t mode)
+char			*ft_lnksuffix(mode_t mode)
 {
 	static char	*all = "@";
 
@@ -267,7 +220,7 @@ char			**ft_sockcolor(t_env *env, mode_t mode)
 	return (env->colortab[3]);
 }
 
-char			*ft_socksuffixbigf(mode_t mode)
+char			*ft_socksuffix(mode_t mode)
 {
 	static char	*all = "=";
 
@@ -281,7 +234,7 @@ char			**ft_whtcolor(t_env *env, mode_t mode)
 	return (env->colortab[0]);
 }
 
-char			*ft_whtsuffixbigf(mode_t mode)
+char			*ft_whtsuffix(mode_t mode)
 {
 	static char	*all = "%";
 
@@ -305,23 +258,33 @@ t_ftype				ft_ftypetab(int i)
 {
 	static t_ftype	ftypetab[] = {
 		{'\0', NULL, NULL, NULL, NULL},
-		{'p', &ft_fifocolor, &ft_fifosuffixbigf, &ft_emptystr, &ft_octsize},
+		{'p', &ft_fifocolor, &ft_fifosuffix, &ft_emptystr, &ft_octsize},
 		{'c', &ft_chrcolor, &ft_emptystr, &ft_emptystr, &ft_majmin},
 		{'\0', NULL, NULL, NULL, NULL},
-		{'d', &ft_dircolor, &ft_dirsuffixbigf, &ft_dirsuffixp, &ft_octsize},
+		{'d', &ft_dircolor, &ft_dirsuffix, &ft_dirsuffix, &ft_octsize},
 		{'\0', NULL, NULL, NULL, NULL},
 		{'b', &ft_blkcolor, &ft_emptystr, &ft_emptystr, &ft_majmin},
 		{'\0', NULL, NULL, NULL, NULL},
-		{'-', &ft_regcolor, &ft_regsuffixbigf, &ft_emptystr, &ft_octsize},
+		{'-', &ft_regcolor, &ft_regsuffix, &ft_emptystr, &ft_octsize},
 		{'\0', NULL, NULL, NULL, NULL},
-		{'l', &ft_lnkcolor, &ft_lnksuffixbigf, &ft_emptystr, &ft_octsize},
+		{'l', &ft_lnkcolor, &ft_lnksuffix, &ft_emptystr, &ft_octsize},
 		{'\0', NULL, NULL, NULL, NULL},
-		{'s', &ft_sockcolor, &ft_socksuffixbigf, &ft_emptystr, &ft_octsize},
+		{'s', &ft_sockcolor, &ft_socksuffix, &ft_emptystr, &ft_octsize},
 		{'\0', NULL, NULL, NULL, NULL},
-		{'-', &ft_whtcolor, &ft_whtsuffixbigf, &ft_emptystr, &ft_octsize}
+		{'-', &ft_whtcolor, &ft_whtsuffix, &ft_emptystr, &ft_octsize}
 	};
 
 	return (ftypetab[i]);
+}
+
+char			*ft_getsuffixbigf(mode_t mode)
+{
+	return (ft_ftypetab((mode >> 12) & 017).suffixbigf_f(mode));
+}
+
+char			*ft_getsuffixp(mode_t mode)
+{
+	return (ft_ftypetab((mode >> 12) & 017).suffixp_f(mode));
 }
 
 char			*ft_stpcpy(char *dst, char *src)
@@ -334,6 +297,83 @@ char			*ft_stpcpy(char *dst, char *src)
 	}
 	*dst = '\0';
 	return (dst);
+}
+
+int				ft_inodesize(t_env *env, t_file *file)
+{
+	int			inode;
+	int			size;
+
+	(void)env;
+	inode = file->stat.st_ino;
+	size = 1;
+	while (inode > 9)
+	{
+		size++;
+		inode /= 10;
+	}
+	return (size);
+}
+
+void			ft_inodeprint(t_env *env, t_file *file, int spaces)
+{
+	ino_t		inode;
+	ino_t		power;
+
+	while (spaces--)
+		ft_fillbuff_c(env, 1, ' ');
+	inode = file->stat.st_ino;
+	power = 1;
+	while (inode / 10 >= power)
+		power *= 10;
+	while (power)
+	{
+		ft_fillbuff_c(env, 1, inode / power % 10 + '0');
+		power /= 10;
+	}
+	ft_fillbuff_c(env, 1, ' ');
+}
+
+void			ft_colorprint(t_env *env, t_file *file, int spaces)
+{
+	(void)spaces;
+	ft_fillbuff(env, 1, ft_ftypetab((file->stat.st_mode >> 12) & 017).
+		color_f(env, file->stat.st_mode)[0]);
+	ft_fillbuff(env, 1, ft_ftypetab((file->stat.st_mode >> 12) & 017).
+		color_f(env, file->stat.st_mode)[1]);
+}
+
+void			ft_nameprint(t_env *env, t_file *file, int spaces)
+{
+	(void)spaces;
+	ft_fillbuff(env, 1, file->name);
+}
+
+void			ft_endcolorprint(t_env *env, t_file *file, int spaces)
+{
+	(void)spaces;
+	ft_fillbuff(env, 1, ft_ftypetab((file->stat.st_mode >> 12) & 017).
+		color_f(env, file->stat.st_mode)[2]);
+}
+
+void			ft_suffixprint(t_env *env, t_file *file, int spaces)
+{
+	(void)spaces;
+	ft_fillbuff(env, 1, env->getsuffix_f(file->stat.st_mode));
+}
+
+t_data			ft_normaldatatab(int i)
+{
+	static t_data	normaldatatab[] = {
+		{&ft_inodesize, &ft_inodeprint},
+		{NULL, NULL},//{&ft_blocksize, &ft_printblock},
+		{NULL, &ft_colorprint},
+		{NULL, &ft_nameprint},
+		{NULL, &ft_endcolorprint},
+		{NULL, &ft_suffixprint}
+	};
+
+	return (normaldatatab[i]);
 }
 
 int				ft_addarg(t_file **list, char *arg, char *path, t_file *file)
@@ -372,9 +412,10 @@ void			ft_config(t_env *env)
 	env->explore_f = &ft_explore;
 	env->select_f = &ft_nohidden_select;
 	env->gettime_f = &ft_getmtime;
+	env->getsuffix_f = NULL;
 	env->total = 0;
-	env->normal_mask = 0x00000004;
-	env->long_mask = 0x00000f69;
+	env->normal_mask = 0x00000008;
+	env->long_mask = 0x000096fc;
 	env->colortab = NULL;
 	env->badargs = NULL;
 	env->fileargs = NULL;
@@ -463,6 +504,8 @@ void			ft_freelist(t_file *list)
 	free(list);
 }
 
+
+
 void			ft_badargs(t_env *env)
 {
 	t_file		*list;
@@ -495,16 +538,56 @@ void			ft_getperms(t_env *env, mode_t mode)
 	}
 }
 
+int				ft_getmax(t_env *env, t_file *list, int i)
+{
+	int			max;
+
+	max = 0;
+	while (list)
+	{
+		if ((list->size[i] = ft_normaldatatab(i).size(env, list)) > max)
+			max = list->size[i];
+		list = list->next;
+	}
+	return (max);
+}
+
+void			ft_normalsize(t_env *env, t_file *list, int *size)
+{
+	int			i;
+
+	i = 0;
+	while (env->normal_mask >> i)
+	{
+		if ((env->normal_mask >> i) & 1 && ft_normaldatatab(i).size)
+			size[i] = ft_getmax(env, list, i);
+		i++;
+	}
+}
+
+void			ft_normalprint(t_env *env, t_file *file, int *size)
+{
+	int			i;
+
+	i = 0;
+	while (env->normal_mask >> i)
+	{
+		if ((env->normal_mask >> i) & 1)
+			ft_normaldatatab(i).print(env, file, size[i] - file->size[i]);
+		i++;
+	}
+}
+
 void			ft_print_oebl(t_env *env)
 {
 	t_file		*list;
+	int			size[6];
 
 	list = env->fileargs;
+	ft_normalsize(env, list, size);
 	while (list)
 	{
-		ft_getperms(env, list->stat.st_mode);
-		ft_fillbuff_c(env, 1, ' ');
-		ft_fillbuff(env, 1, list->name);
+		ft_normalprint(env, list, size);
 		ft_fillbuff_c(env, 1, '\n');
 		list = list->next;
 	}

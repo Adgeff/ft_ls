@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:38:41 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/09 22:30:02 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/11 21:13:49 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,19 +30,11 @@
 
 typedef struct dirent	t_dirent;
 
-typedef struct			s_vsize
-{
-	int					lnnum;
-	int					uid;
-	int					gid;
-	int					size;
-}						t_vsize;
-
 typedef struct			s_file
 {
 	char				*name;
 	char				*path;
-	t_vsize				vsize;
+	int					size[16];
 	struct stat			stat;
 	struct s_file		*next;
 }						t_file;
@@ -75,11 +67,33 @@ typedef struct			s_env
 	char				*(*getsuffix_f)(mode_t);
 }						t_env;
 
+typedef struct			s_ftype
+{
+	char				lprint;
+	char				**(*color_f)(t_env *env, mode_t);
+	char				*(*suffixbigf_f)(mode_t);
+	char				*(*suffixp_f)(mode_t);
+	void				(*size_f)(t_env *env, t_file *file);
+}						t_ftype;
+
+typedef struct			s_colorcode
+{
+	char				charcode;
+	char				*foreground;
+	char				*background;
+}						t_colorcode;
+
 typedef struct			s_opt
 {
 	char				opt;
 	int					(*f)(t_env *, char);
 }						t_opt;
+
+typedef struct			s_data
+{
+	int					(*size)(t_env *, t_file *);
+	void				(*print)(t_env *, t_file *, int);
+}						t_data;
 
 /*
 **						ft_comp.c
@@ -118,6 +132,8 @@ t_file					*ft_rev_list(t_env *env, t_file *list,
 */
 
 int						ft_bigaopt(t_env *env, char opt);
+int						ft_bigfopt(t_env *env, char opt);
+int						ft_biggopt(t_env *env, char opt);
 int						ft_bigropt(t_env *env, char opt);
 int						ft_bigsopt(t_env *env, char opt);
 int						ft_biguopt(t_env *env, char opt);
@@ -125,7 +141,9 @@ int						ft_aopt(t_env *env, char opt);
 int						ft_copt(t_env *env, char opt);
 int						ft_dopt(t_env *env, char opt);
 int						ft_fopt(t_env *env, char opt);
+int						ft_iopt(t_env *env, char opt);
 int						ft_mopt(t_env *env, char opt);
+int						ft_popt(t_env *env, char opt);
 int						ft_ropt(t_env *env, char opt);
 int						ft_topt(t_env *env, char opt);
 int						ft_uopt(t_env *env, char opt);
@@ -186,6 +204,10 @@ char					*ft_strrchr(char *str, char c);
 **						others
 */
 
+t_ftype					ft_ftypetab(int i);
+char					*ft_getsuffixbigf(mode_t mode);
+char					*ft_getsuffixp(mode_t mode);
+int						ft_config_colors(t_env *env);
 int						ft_addarg(t_file **list, char *arg,
 						char *path, t_file *file);
 ssize_t					ft_writebuff(t_env *env);

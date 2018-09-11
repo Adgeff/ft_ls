@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 17:38:04 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/06 21:53:55 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/11 21:13:35 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,25 @@ int		ft_bigaopt(t_env *env, char opt)
 {
 	(void)opt;
 	env->select_f = &ft_nodot_select;
+	return (0);
+}
+
+int		ft_bigfopt(t_env *env, char opt)
+{
+	env->getsuffix_f = &ft_getsuffixbigf;
+	env->normal_mask = env->normal_mask | 0x00000020;
+	env->long_mask = env->long_mask | 0x00004000;
+	(void)opt;
+	return (0);
+}
+
+int		ft_biggopt(t_env *env, char opt)
+{
+	if (ft_config_colors(env))
+		return (1);
+	env->normal_mask = env->normal_mask | 0x00000014;
+	env->long_mask = env->long_mask | 0x00002800;
+	(void)opt;
 	return (0);
 }
 
@@ -68,10 +87,27 @@ int		ft_fopt(t_env *env, char opt)
 	return (0);
 }
 
+int		ft_iopt(t_env *env, char opt)
+{
+	(void)opt;
+	env->normal_mask = env->normal_mask | 0x00000001;
+	env->long_mask = env->long_mask | 0x00000001;
+	return (0);
+}
+
 int		ft_mopt(t_env *env, char opt)
 {
 	(void)opt;
 	env->print_f = &ft_print_comma;
+	return (0);
+}
+
+int		ft_popt(t_env *env, char opt)
+{
+	env->getsuffix_f = &ft_getsuffixp;
+	env->normal_mask = env->normal_mask | 0x00000020;
+	env->long_mask = env->long_mask | 0x00004000;
+	(void)opt;
 	return (0);
 }
 
