@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:34:55 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/11 21:16:54 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/14 13:38:40 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,28 +58,46 @@ char			*ft_getback(t_env *env, int type)
 	return (ft_colorcode(i).background);
 }
 
-int				ft_check_colorcode(char *colorcode)
+char			ft_getcharcode(t_env *env, char *envcolor, int i)
 {
+	int			j;
+
+	j = 0;
+	while (ft_colorcode(j).charcode &&
+		ft_colorcode(j).charcode != envcolor[i] &&
+		ft_colorcode(j).charcode != envcolor[i] + ('a' - '0'))
+		j++;
+	if (ft_colorcode(j).charcode)
+		return (ft_colorcode(j).charcode);
+	else
+	{
+		ft_fillbuff(env, 2, "error: invalid character '");
+		ft_fillbuff_c(env, 2, envcolor[i]);
+		ft_fillbuff(env, 2, "' in LSCOLORS env var\n");
+		return ('x');
+	}
+}
+
+void			ft_getcolorcode(t_env *env)
+{
+	char		*defcolor;
+	char		*envcolor;
 	int			i;
 
-	if (!colorcode)
-		return (1);
+	defcolor = DEF_LSCOLORS;
+	if (!(envcolor = getenv("LSCOLORS")))
+		envcolor = defcolor;
 	i = 0;
-	while (colorcode[i])
-		i++;
-	if (i != 22)
-		return (1);
-	while (*colorcode)
+	while (defcolor[i] && envcolor[i])
 	{
-		i = 0;
-		while (ft_colorcode(i).charcode &&
-			ft_colorcode(i).charcode != *colorcode)
-			i++;
-		if (!ft_colorcode(i).charcode)
-			return (1);
-		colorcode++;
+		env->colorcode[i] = ft_getcharcode(env, envcolor, i);
+		i++;
 	}
-	return (0);
+	while (defcolor[i])
+	{
+		env->colorcode[i] = defcolor[i];
+		i++;
+	}
 }
 
 int				ft_init_colortab(t_env *env)
@@ -102,9 +120,7 @@ int				ft_config_colors(t_env *env)
 {
 	int			i;
 
-	env->colorcode = getenv("LSCOLORS");
-	if (ft_check_colorcode(env->colorcode))
-		env->colorcode = DEF_COLORCODE;
+	ft_getcolorcode(env);
 	if (!env->colortab && ft_init_colortab(env))
 		return (1);
 	env->colortab[0][0] = "";
@@ -116,13 +132,11 @@ int				ft_config_colors(t_env *env)
 		env->colortab[i][0] = ft_getfor(env, i);
 		env->colortab[i][1] = ft_getback(env, i);
 		env->colortab[i][2] = (env->colortab[i][0][0] ||
-			env->colortab[i][1][0]) ? "\033[0m" : "";
+			env->colortab[i][1][0]) ? "\033[39;49m\033[0m" : "";
 		i++;
 	}
 	return (0);
 }
-
-
 
 char			*ft_emptystr(mode_t mode)
 {
@@ -257,21 +271,21 @@ void			ft_majmin(t_env *env, t_file *file)
 t_ftype				ft_ftypetab(int i)
 {
 	static t_ftype	ftypetab[] = {
-		{'\0', NULL, NULL, NULL, NULL},
-		{'p', &ft_fifocolor, &ft_fifosuffix, &ft_emptystr, &ft_octsize},
-		{'c', &ft_chrcolor, &ft_emptystr, &ft_emptystr, &ft_majmin},
-		{'\0', NULL, NULL, NULL, NULL},
-		{'d', &ft_dircolor, &ft_dirsuffix, &ft_dirsuffix, &ft_octsize},
-		{'\0', NULL, NULL, NULL, NULL},
-		{'b', &ft_blkcolor, &ft_emptystr, &ft_emptystr, &ft_majmin},
-		{'\0', NULL, NULL, NULL, NULL},
-		{'-', &ft_regcolor, &ft_regsuffix, &ft_emptystr, &ft_octsize},
-		{'\0', NULL, NULL, NULL, NULL},
-		{'l', &ft_lnkcolor, &ft_lnksuffix, &ft_emptystr, &ft_octsize},
-		{'\0', NULL, NULL, NULL, NULL},
-		{'s', &ft_sockcolor, &ft_socksuffix, &ft_emptystr, &ft_octsize},
-		{'\0', NULL, NULL, NULL, NULL},
-		{'-', &ft_whtcolor, &ft_whtsuffix, &ft_emptystr, &ft_octsize}
+		{'\0', NULL, NULL, NULL},
+		{'p', &ft_fifocolor, &ft_fifosuffix, &ft_emptystr},
+		{'c', &ft_chrcolor, &ft_emptystr, &ft_emptystr},
+		{'\0', NULL, NULL, NULL},
+		{'d', &ft_dircolor, &ft_dirsuffix, &ft_dirsuffix},
+		{'\0', NULL, NULL, NULL},
+		{'b', &ft_blkcolor, &ft_emptystr, &ft_emptystr},
+		{'\0', NULL, NULL, NULL},
+		{'-', &ft_regcolor, &ft_regsuffix, &ft_emptystr},
+		{'\0', NULL, NULL, NULL},
+		{'l', &ft_lnkcolor, &ft_lnksuffix, &ft_emptystr},
+		{'\0', NULL, NULL, NULL},
+		{'s', &ft_sockcolor, &ft_socksuffix, &ft_emptystr},
+		{'\0', NULL, NULL, NULL},
+		{'-', &ft_whtcolor, &ft_whtsuffix, &ft_emptystr}
 	};
 
 	return (ftypetab[i]);
@@ -301,7 +315,7 @@ char			*ft_stpcpy(char *dst, char *src)
 
 int				ft_inodesize(t_env *env, t_file *file)
 {
-	int			inode;
+	ino_t		inode;
 	int			size;
 
 	(void)env;
@@ -334,6 +348,262 @@ void			ft_inodeprint(t_env *env, t_file *file, int spaces)
 	ft_fillbuff_c(env, 1, ' ');
 }
 
+int				ft_blockssize(t_env *env, t_file *file)
+{
+	blkcnt_t	blocks;
+	int			size;
+	
+	blocks = (file->stat.st_blocks * 512 + (env->blocksize - 1))
+		/ env->blocksize;
+	size = 1;
+	while (blocks > 9)
+	{
+		size++;
+		blocks /= 10;
+	}
+	return (size);
+}
+
+void			ft_blocksprint(t_env *env, t_file *file, int spaces)
+{
+	blkcnt_t	blocks;
+	blkcnt_t	power;
+
+	while (spaces--)
+		ft_fillbuff_c(env, 1, ' ');
+	blocks = (file->stat.st_blocks * 512 + (env->blocksize - 1))
+		/ env->blocksize;
+	power = 1;
+	while (blocks / 10 >= power)
+		power *= 10;
+	while (power)
+	{
+		ft_fillbuff_c(env, 1, blocks / power % 10 + '0');
+		power /= 10;
+	}
+	ft_fillbuff_c(env, 1, ' ');
+}
+
+void			ft_typeprint(t_env *env, t_file *file, int spaces)
+{
+	(void)spaces;
+	ft_fillbuff_c(env, 1, ft_ftypetab((file->stat.st_mode >> 12) & 017).lprint);
+}
+
+void			ft_permsprint(t_env *env, t_file *file, int spaces)
+{
+	int			i;
+
+	(void)spaces;
+	i = 0;
+	while (i < 9)
+	{
+		ft_fillbuff_c(env, 1, ft_getperm(i, file->stat.st_mode));
+		i++;
+	}
+}
+
+void			ft_eaaclprint(t_env *env, t_file *file, int spaces)
+{
+	char		ea;
+	acl_t		acl;
+
+	(void)spaces;
+	if (listxattr(file->path, &ea, 1, 0) > 0)
+		ft_fillbuff_c(env, 1, '@');
+	else if ((acl = acl_get_file(file->path, ACL_TYPE_ACCESS)))
+	{
+		ft_fillbuff_c(env, 1, '+');
+		acl_free(acl);
+	}
+	else
+		ft_fillbuff_c(env, 1, ' ');
+	ft_fillbuff_c(env, 1, ' ');
+}
+
+int				ft_nlinksize(t_env *env, t_file *file)
+{
+	nlink_t		nlink;
+	int			size;
+
+	(void)env;
+	nlink = file->stat.st_nlink;
+	size = 1;
+	while (nlink > 9)
+	{
+		size++;
+		nlink /= 10;
+	}
+	return (size);
+}
+
+void			ft_nlinkprint(t_env *env, t_file *file, int spaces)
+{
+	nlink_t		nlink;
+	nlink_t		power;
+
+	while (spaces--)
+		ft_fillbuff_c(env, 1, ' ');
+	nlink = file->stat.st_nlink;
+	power = 1;
+	while (nlink / 10 >= power)
+		power *= 10;
+	while (power)
+	{
+		ft_fillbuff_c(env, 1, nlink / power % 10 + '0');
+		power /= 10;
+	}
+	ft_fillbuff_c(env, 1, ' ');
+}
+
+int				ft_uididsize(t_env *env, t_file *file)
+{
+	uid_t		uid;
+	int			size;
+
+	(void)env;
+	uid = file->stat.st_uid;
+	size = 1;
+	while (uid > 9)
+	{
+		size++;
+		uid /= 10;
+	}
+	return (size);
+}
+
+int				ft_uidnamesize(t_env *env, t_file *file)
+{
+	int			size;
+
+	(void)env;
+	if (!(file->uid = getpwuid(file->stat.st_uid)))
+		return (ft_uididsize(env, file));
+	size = 0;
+	while (file->uid->pw_name[size])
+		size++;
+	return (size);
+}
+
+int				ft_uidsize(t_env *env, t_file *file)
+{
+	return (env->uidsize_f(env, file));
+}
+
+void			ft_uididprint(t_env *env, t_file *file)
+{
+	uid_t		uid;
+	uid_t		power;
+
+	uid = file->stat.st_uid;
+	power = 1;
+	while (uid / 10 >= power)
+		power *= 10;
+	while (power)
+	{
+		ft_fillbuff_c(env, 1, uid / power % 10 + '0');
+		power /= 10;
+	}
+}
+
+void			ft_uidnameprint(t_env *env, t_file *file)
+{
+	if (file->uid)
+		ft_fillbuff(env, 1, file->uid->pw_name);
+	else
+		ft_uididprint(env, file);
+}
+
+void			ft_uidprint(t_env *env, t_file *file, int spaces)
+{
+	env->uidprint_f(env, file);
+	while (spaces--)
+		ft_fillbuff_c(env, 1, ' ');
+}
+
+int				ft_gididsize(t_env *env, t_file *file)
+{
+	gid_t		gid;
+	int			size;
+
+	(void)env;
+	gid = file->stat.st_gid;
+	size = 1;
+	while (gid > 9)
+	{
+		size++;
+		gid /= 10;
+	}
+	return (size);
+}
+
+int				ft_gidnamesize(t_env *env, t_file *file)
+{
+	int			size;
+
+	(void)env;
+	if (!(file->gid = getgrgid(file->stat.st_gid)))
+		return (ft_gididsize(env, file));
+	size = 0;
+	while (file->gid->gr_name[size])
+		size++;
+	return (size);
+}
+
+int				ft_gidsize(t_env *env, t_file *file)
+{
+	return (env->gidsize_f(env, file));
+}
+
+void			ft_gididprint(t_env *env, t_file *file)
+{
+	gid_t		gid;
+	gid_t		power;
+
+	gid = file->stat.st_gid;
+	power = 1;
+	while (gid / 10 >= power)
+		power *= 10;
+	while (power)
+	{
+		ft_fillbuff_c(env, 1, gid / power % 10 + '0');
+		power /= 10;
+	}
+}
+
+void			ft_gidnameprint(t_env *env, t_file *file)
+{
+	if (file->gid)
+		ft_fillbuff(env, 1, file->gid->gr_name);
+	else
+		ft_gididprint(env, file);
+}
+
+void			ft_gidprint(t_env *env, t_file *file, int spaces)
+{
+	env->gidprint_f(env, file);
+	while (spaces--)
+		ft_fillbuff_c(env, 1, ' ');
+}
+
+/*int				ft_sizebytesize(t_env *env, t_file *file)
+{
+	off_t		off;
+	int			size;
+
+	(void)env;
+	off = file->stat.st_size;
+	size = 1;
+	while (
+}*/
+
+int				ft_sizesize(t_env *env, t_file *file)
+{
+	if (S_ISCHR(file->stat.st_mode) || S_ISBLK(file->stat.st_mode))
+		return (8);
+	return (env->sizesize_f(env, file));
+}
+
 void			ft_colorprint(t_env *env, t_file *file, int spaces)
 {
 	(void)spaces;
@@ -362,11 +632,11 @@ void			ft_suffixprint(t_env *env, t_file *file, int spaces)
 	ft_fillbuff(env, 1, env->getsuffix_f(file->stat.st_mode));
 }
 
-t_data			ft_normaldatatab(int i)
+t_data				ft_normaldatatab(int i)
 {
 	static t_data	normaldatatab[] = {
 		{&ft_inodesize, &ft_inodeprint},
-		{NULL, NULL},//{&ft_blocksize, &ft_printblock},
+		{&ft_blockssize, &ft_blocksprint},
 		{NULL, &ft_colorprint},
 		{NULL, &ft_nameprint},
 		{NULL, &ft_endcolorprint},
@@ -374,6 +644,30 @@ t_data			ft_normaldatatab(int i)
 	};
 
 	return (normaldatatab[i]);
+}
+
+t_data				ft_longdatatab(int i)
+{
+	static t_data	longdatatab[] = {
+		{&ft_inodesize, &ft_inodeprint},
+		{&ft_blockssize, &ft_blocksprint},
+		{NULL, &ft_typeprint},
+		{NULL, &ft_permsprint},
+		{NULL, &ft_eaaclprint},
+		{&ft_nlinksize, &ft_nlinkprint},
+		{&ft_uidsize, &ft_uidprint},
+		{&ft_gidsize, &ft_gidprint},
+		{NULL, NULL},
+//		{&ft_sizesize, &ft_sizeprint},
+//		{NULL, &ft_timeprint},
+		{NULL, &ft_colorprint},
+		{NULL, &ft_nameprint},
+		{NULL, &ft_endcolorprint},
+		{NULL, &ft_suffixprint},
+//		{NULL, &ft_linkprint}
+	};
+
+	return (longdatatab[i]);
 }
 
 int				ft_addarg(t_file **list, char *arg, char *path, t_file *file)
@@ -402,6 +696,49 @@ int				ft_nodot_select(const char *file_name)
 	return (ft_strcmp(file_name, ".") && ft_strcmp(file_name, ".."));
 }
 
+int				ft_atoi(char *str)
+{
+	int			result;
+	int			sign;
+
+	result = 0;
+	sign = 1;
+	if (*str == '-')
+		sign = -1;
+	if (*str == '-' || *str == '+')
+		str++;
+	while (*str >= '0' && *str <= '9')
+	{
+		result = result * 10 + (*str - '0') * sign;
+		str++;
+	}
+	return (result);
+}
+
+void			ft_config_blocksize(t_env *env)
+{
+	char		*envblksize;
+
+	if (!(envblksize = getenv("BLOCKSIZE")))
+		env->blocksize = DEF_BLOCKSIZE;
+	else
+		env->blocksize = ft_atoi(envblksize);
+	if (env->blocksize < 512)
+	{
+		env->blocksize = 512;
+		ft_fillbuff(env, 2, env->prog_name);
+		ft_fillbuff(env, 2, ": minimum blocksize is 512\n");
+	}
+	else if (env->blocksize > 1073741824)
+	{
+		env->blocksize = 1073741824;
+		ft_fillbuff(env, 2, env->prog_name);
+		ft_fillbuff(env, 2, ": maximum blocksize is 1G\n");
+	}
+	else
+		env->blocksize = env->blocksize / 512 * 512;
+}
+
 void			ft_config(t_env *env)
 {
 	env->size = 0;
@@ -414,8 +751,9 @@ void			ft_config(t_env *env)
 	env->gettime_f = &ft_getmtime;
 	env->getsuffix_f = NULL;
 	env->total = 0;
-	env->normal_mask = 0x00000008;
-	env->long_mask = 0x000096fc;
+	env->normal_mask = n_def_mask;
+	env->long_mask = l_def_mask;
+	env->blocksize = 0;
 	env->colortab = NULL;
 	env->badargs = NULL;
 	env->fileargs = NULL;
@@ -504,8 +842,6 @@ void			ft_freelist(t_file *list)
 	free(list);
 }
 
-
-
 void			ft_badargs(t_env *env)
 {
 	t_file		*list;
@@ -524,18 +860,6 @@ void			ft_badargs(t_env *env)
 	}
 	ft_freelist(env->badargs);
 	env->badargs = NULL;
-}
-
-void			ft_getperms(t_env *env, mode_t mode)
-{
-	int			i;
-
-	i = 0;
-	while (i < 9)
-	{
-		ft_fillbuff_c(env, 1, ft_getperm(i, mode));
-		i++;
-	}
 }
 
 int				ft_getmax(t_env *env, t_file *list, int i)
@@ -578,6 +902,30 @@ void			ft_normalprint(t_env *env, t_file *file, int *size)
 	}
 }
 
+void			ft_totalprint(t_env *env, t_file *list)
+{
+	blkcnt_t	total;
+	blkcnt_t	power;
+
+	total = 0;
+	while (list)
+	{
+		total = total + list->stat.st_blocks;
+		list = list->next;
+	}
+	total = (total * 512 + (env->blocksize - 1)) / env->blocksize;
+	ft_fillbuff(env, 1, "total ");
+	power = 1;
+	while (total / 10 >= power)
+		power *= 10;
+	while (power)
+	{
+		ft_fillbuff_c(env, 1, total / power % 10 + '0');
+		power /= 10;
+	}
+	ft_fillbuff_c(env, 1, '\n');
+}
+
 void			ft_print_oebl(t_env *env)
 {
 	t_file		*list;
@@ -585,6 +933,8 @@ void			ft_print_oebl(t_env *env)
 
 	list = env->fileargs;
 	ft_normalsize(env, list, size);
+	if (env->total & 1)
+		ft_totalprint(env, list);
 	while (list)
 	{
 		ft_normalprint(env, list, size);
@@ -765,6 +1115,20 @@ void			ft_untitleddir(t_env *env)
 	env->dirtitle_f = &ft_titleddir;
 }
 
+void			ft_freecolortab(t_env *env)
+{
+	int			i;
+
+	i = 0;
+	while (i < 12)
+	{
+		free(env->colortab[i]);
+		i++;
+	}
+	free(env->colortab);
+	env->colortab = NULL;
+}
+
 int				ft_ls(t_env *env)
 {
 	ft_config(env);
@@ -775,10 +1139,12 @@ int				ft_ls(t_env *env)
 		ft_badargs(env);
 	if (env->fileargs)
 		ft_fileargs(env);
-	env->total = 1;
+	env->total = env->total >> 1;
 	if (env->dirargs && env->explore_f(env))
 		return (1);
 	ft_writebuff(env);
+	if (env->colortab)
+		ft_freecolortab(env);
 	return (0);
 }
 

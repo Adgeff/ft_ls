@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:38:41 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/11 21:13:49 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/14 11:43:44 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,56 @@
 # include <errno.h>
 # include <dirent.h>
 # include <time.h>
+# include <sys/acl.h>
+# include <sys/xattr.h>
+# include <pwd.h>
+# include <grp.h>
+# include <uuid/uuid.h>
 
-# define DEF_COLORCODE "exfxcxdxbxegedabagacad"
+/*
+**							default values for env variables
+*/
+
+# define DEF_LSCOLORS		"exfxcxdxbxegedabagacad"
+# define DEF_BLOCKSIZE		512
+
+typedef enum			e_n_mask
+{
+	n_inode_mask = 0x00000001,
+	n_blocks_mask = 0x00000002,
+	n_colorstart_mask = 0x00000004,
+	n_name_mask = 0x00000008,
+	n_colorend_mask = 0x00000010,
+	n_suffix_mask = 0x00000020,
+
+	n_color_mask = (n_colorstart_mask | n_colorend_mask),
+	n_def_mask = (n_name_mask)
+}						t_n_mask;
+
+typedef enum			e_l_mask
+{
+	l_inode_mask = 0x00000001,
+	l_blocks_mask = 0x00000002,
+	l_type_mask = 0x00000004,
+	l_perms_mask = 0x00000008,
+	l_eaacl_mask = 0x00000010,
+	l_nlink_mask = 0x00000020,
+	l_uid_mask = 0x00000040,
+	l_gid_mask = 0x00000080,
+	l_flag_mask = 0x00000100,
+	l_size_mask = 0x00000200,
+	l_time_mask = 0x00000400,
+	l_colorstart_mask = 0x00000800,
+	l_name_mask = 0x00001000,
+	l_colorend_mask = 0x00002000,
+	l_suffix_mask = 0x00004000,
+	l_link_mask = 0x000080000,
+
+	l_mode_mask = (l_type_mask | l_perms_mask | l_eaacl_mask),
+	l_color_mask = (l_colorstart_mask | l_colorend_mask),
+	l_def_mask = (l_mode_mask | l_nlink_mask | l_uid_mask | l_gid_mask |
+		l_size_mask | l_time_mask | l_name_mask | l_link_mask)
+}						t_l_mask;
 
 typedef struct dirent	t_dirent;
 
@@ -35,6 +83,8 @@ typedef struct			s_file
 	char				*name;
 	char				*path;
 	int					size[16];
+	struct passwd		*uid;
+	struct group		*gid;
 	struct stat			stat;
 	struct s_file		*next;
 }						t_file;
@@ -48,10 +98,11 @@ typedef struct			s_env
 	int					fd;
 	ssize_t				size;
 	int					total;
-	int					normal_mask;
-	int					long_mask;
+	t_n_mask			normal_mask;
+	t_l_mask			long_mask;
 	char				***colortab;
-	char				*colorcode;
+	char				colorcode[22];
+	long long			blocksize;
 	t_file				*badargs;
 	t_file				*fileargs;
 	t_file				*dirargs;
@@ -65,6 +116,12 @@ typedef struct			s_env
 	int					(*select_f)(const char *file_name);
 	time_t				(*gettime_f)(struct stat *stat);
 	char				*(*getsuffix_f)(mode_t);
+	int					(*uidsize_f)(struct s_env *, t_file *);
+	void				(*uidprint_f)(struct s_env *, t_file *);
+	int					(*gidsize_f)(struct s_env *, t_file *);
+	void				(*gidprint_f)(struct s_env *, t_file *);
+	int					(*sizesize_f)(struct s_env *, t_file *);
+	void				(*sizeprint_f)(struct s_env *, t_file *);
 }						t_env;
 
 typedef struct			s_ftype
@@ -73,7 +130,6 @@ typedef struct			s_ftype
 	char				**(*color_f)(t_env *env, mode_t);
 	char				*(*suffixbigf_f)(mode_t);
 	char				*(*suffixp_f)(mode_t);
-	void				(*size_f)(t_env *env, t_file *file);
 }						t_ftype;
 
 typedef struct			s_colorcode
@@ -142,9 +198,11 @@ int						ft_copt(t_env *env, char opt);
 int						ft_dopt(t_env *env, char opt);
 int						ft_fopt(t_env *env, char opt);
 int						ft_iopt(t_env *env, char opt);
+int						ft_kopt(t_env *env, char opt);
 int						ft_mopt(t_env *env, char opt);
 int						ft_popt(t_env *env, char opt);
 int						ft_ropt(t_env *env, char opt);
+int						ft_sopt(t_env *env, char opt);
 int						ft_topt(t_env *env, char opt);
 int						ft_uopt(t_env *env, char opt);
 int						ft_illegalopt(t_env *env, char opt);
@@ -204,6 +262,7 @@ char					*ft_strrchr(char *str, char c);
 **						others
 */
 
+void					ft_config_blocksize(t_env *env);
 t_ftype					ft_ftypetab(int i);
 char					*ft_getsuffixbigf(mode_t mode);
 char					*ft_getsuffixp(mode_t mode);
