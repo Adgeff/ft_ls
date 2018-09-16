@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:34:55 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/14 13:38:40 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/16 19:48:32 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,18 +254,6 @@ char			*ft_whtsuffix(mode_t mode)
 
 	(void)mode;
 	return (all);
-}
-
-void			ft_octsize(t_env *env, t_file *file)
-{
-	(void)env;
-	(void)file;
-}
-
-void			ft_majmin(t_env *env, t_file *file)
-{
-	(void)env;
-	(void)file;
 }
 
 t_ftype				ft_ftypetab(int i)
@@ -586,7 +574,7 @@ void			ft_gidprint(t_env *env, t_file *file, int spaces)
 		ft_fillbuff_c(env, 1, ' ');
 }
 
-/*int				ft_sizebytesize(t_env *env, t_file *file)
+int				ft_sizebytesize(t_env *env, t_file *file)
 {
 	off_t		off;
 	int			size;
@@ -594,14 +582,252 @@ void			ft_gidprint(t_env *env, t_file *file, int spaces)
 	(void)env;
 	off = file->stat.st_size;
 	size = 1;
-	while (
-}*/
+	while (off > 9)
+	{
+		size++;
+		off /= 10;
+	}
+	return (size);
+}
+
+int				ft_sizeunitsize(t_env *env, t_file *file)
+{
+	(void)env;
+	(void)file;
+	return (5);
+}
 
 int				ft_sizesize(t_env *env, t_file *file)
 {
 	if (S_ISCHR(file->stat.st_mode) || S_ISBLK(file->stat.st_mode))
 		return (8);
 	return (env->sizesize_f(env, file));
+}
+
+void			ft_majprint(t_env *env, t_file *file)
+{
+	dev_t		maj;
+	dev_t		power;
+
+	maj = major(file->stat.st_rdev);
+	power = 1;
+	while (maj / 10 >= power)
+		power *= 10;
+	if (power < 100)
+		ft_fillbuff_c(env, 1, ' ');
+	if (power < 10)
+		ft_fillbuff_c(env, 1, ' ');
+	while (power)
+	{
+		ft_fillbuff_c(env, 1, maj / power % 10 + '0');
+		power /= 10;
+	}
+}
+
+void			ft_minprint(t_env *env, t_file *file)
+{
+	dev_t		min;
+	dev_t		power;
+
+	min = minor(file->stat.st_rdev);
+	power = 1;
+	while (min / 10 >= power)
+		power *= 10;
+	if (power < 100)
+		ft_fillbuff_c(env, 1, ' ');
+	if (power < 10)
+		ft_fillbuff_c(env, 1, ' ');
+	while (power)
+	{
+		ft_fillbuff_c(env, 1, min / power % 10 + '0');
+		power /= 10;
+	}
+}
+
+void			ft_majminprint(t_env *env, t_file *file, int spaces)
+{
+	while (spaces--)
+		ft_fillbuff_c(env, 1, '0');
+	ft_majprint(env, file);
+	ft_fillbuff(env, 1, ", ");
+	ft_minprint(env, file);
+}
+
+void			ft_sizebyteprint(t_env *env, t_file *file, int spaces)
+{
+	off_t		off;
+	off_t		power;
+
+	off = file->stat.st_size;
+	power = 1;
+	while (spaces--)
+		ft_fillbuff_c(env, 1, ' ');
+	while (off / 10 >= power)
+		power *= 10;
+	while (power)
+	{
+		ft_fillbuff_c(env, 1, off / power % 10 + '0');
+		power /= 10;
+	}
+}
+
+void			ft_sizepunitprint(t_env *env, t_file *file)
+{
+	off_t		p;
+	off_t		t;
+
+	t = TBYTES(file->stat.st_size) % 1024 * 1000 / 1024;
+	p = PBYTES(file->stat.st_size) + (t > 949);
+	t = ((t + 50) / 100 > 9) ? 0 : (t + 50) / 100;
+	if (p > 9)
+	{
+		ft_fillbuff_c(env, 1, (p > 99) ? p / 100 + '0' : ' ');
+		ft_fillbuff_c(env, 1, p / 10 % 10 + '0');
+		ft_fillbuff_c(env, 1, p % 10 + '0');
+		ft_fillbuff_c(env, 1, 'P');
+	}
+	else
+	{
+		ft_fillbuff_c(env, 1, p + '0');
+		ft_fillbuff_c(env, 1, '.');
+		ft_fillbuff_c(env, 1, t + '0');
+		ft_fillbuff_c(env, 1, 'P');
+	}
+}
+
+void			ft_sizetunitprint(t_env *env, t_file *file)
+{
+	off_t		t;
+	off_t		g;
+
+	g = GBYTES(file->stat.st_size) % 1024 * 1000 / 1024;
+	t = TBYTES(file->stat.st_size) + (g > 949);
+	g = ((g + 50) / 100 > 9) ? 0 : (g + 50) / 100;
+	if (t > 999)
+		ft_sizepunitprint(env, file);
+	else if (t > 9)
+	{
+		ft_fillbuff_c(env, 1, (t > 99) ? t / 100 + '0' : ' ');
+		ft_fillbuff_c(env, 1, t / 10 % 10 + '0');
+		ft_fillbuff_c(env, 1, t % 10 + '0');
+		ft_fillbuff_c(env, 1, 'T');
+	}
+	else
+	{
+		ft_fillbuff_c(env, 1, t + '0');
+		ft_fillbuff_c(env, 1, '.');
+		ft_fillbuff_c(env, 1, g + '0');
+		ft_fillbuff_c(env, 1, 'T');
+	}
+}
+
+void			ft_sizegunitprint(t_env *env, t_file *file)
+{
+	off_t		g;
+	off_t		m;
+
+	m = MBYTES(file->stat.st_size) % 1024 * 1000 / 1024;
+	g = GBYTES(file->stat.st_size) + (m > 949);
+	m = ((m + 50) / 100 > 9) ? 0 : (m + 50) / 100;
+	if (g > 999)
+		ft_sizetunitprint(env, file);
+	else if (g > 9)
+	{
+		ft_fillbuff_c(env, 1, (g > 99) ? g / 100 + '0' : ' ');
+		ft_fillbuff_c(env, 1, g / 10 % 10 + '0');
+		ft_fillbuff_c(env, 1, g % 10 + '0');
+		ft_fillbuff_c(env, 1, 'G');
+	}
+	else
+	{
+		ft_fillbuff_c(env, 1, g + '0');
+		ft_fillbuff_c(env, 1, '.');
+		ft_fillbuff_c(env, 1, m + '0');
+		ft_fillbuff_c(env, 1, 'G');
+	}
+}
+
+void			ft_sizemunitprint(t_env *env, t_file *file)
+{
+	off_t		m;
+	off_t		k;
+
+	k = KBYTES(file->stat.st_size) % 1024 * 1000 / 1024;
+	m = MBYTES(file->stat.st_size) + (k > 949);
+	k = ((k + 50) / 100 > 9) ? 0 : (k + 50) / 100;
+	if (m > 999)
+		ft_sizegunitprint(env, file);
+	else if (m > 9)
+	{
+		ft_fillbuff_c(env, 1, (m > 99) ? m / 100 + '0' : ' ');
+		ft_fillbuff_c(env, 1, m / 10 % 10 + '0');
+		ft_fillbuff_c(env, 1, m % 10 + '0');
+		ft_fillbuff_c(env, 1, 'M');
+	}
+	else
+	{
+		ft_fillbuff_c(env, 1, m + '0');
+		ft_fillbuff_c(env, 1, '.');
+		ft_fillbuff_c(env, 1, k + '0');
+		ft_fillbuff_c(env, 1, 'M');
+	}
+}
+
+void			ft_sizekunitprint(t_env *env, t_file *file)
+{
+	off_t		k;
+	off_t		b;
+
+	b = file->stat.st_size % 1024 * 1000 / 1024;
+	k = KBYTES(file->stat.st_size) + (b > 949);
+	b = ((b + 50) / 100 > 9) ? 0 : (b + 50) / 100;
+	if (k > 999)
+		ft_sizemunitprint(env, file);
+	else if (k > 9)
+	{
+		ft_fillbuff_c(env, 1, (k > 99) ? k / 100 + '0' : ' ');
+		ft_fillbuff_c(env, 1, k / 10 % 10 + '0');
+		ft_fillbuff_c(env, 1, k % 10 + '0');
+		ft_fillbuff_c(env, 1, 'K');
+	}
+	else
+	{
+		ft_fillbuff_c(env, 1, k + '0');
+		ft_fillbuff_c(env, 1, '.');
+		ft_fillbuff_c(env, 1, b + '0');
+		ft_fillbuff_c(env, 1, 'K');
+	}
+}
+
+void			ft_sizebunitprint(t_env *env, t_file *file)
+{
+	off_t		b;
+
+	b = file->stat.st_size;
+	if (b > 999)
+		ft_sizekunitprint(env, file);
+	else
+	{
+		ft_fillbuff_c(env, 1, (b > 99) ? b / 100 + '0' : ' ');
+		ft_fillbuff_c(env, 1, (b > 9) ? b / 10 % 10 + '0' : ' ');
+		ft_fillbuff_c(env, 1, b % 10 + '0');
+		ft_fillbuff_c(env, 1, 'B');
+	}
+}
+
+void			ft_sizeunitprint(t_env *env, t_file *file, int spaces)
+{
+	while (spaces--)
+		ft_fillbuff_c(env, 1, ' ');
+	ft_fillbuff_c(env, 1, ' ');
+	ft_sizebunitprint(env, file);
+}
+
+void			ft_sizeprint(t_env *env, t_file *file, int spaces)
+{
+	if (S_ISCHR(file->stat.st_mode) || S_ISBLK(file->stat.st_mode))
+		return (ft_majminprint(env, file, spaces));
+	return (env->sizeprint_f(env, file, spaces));
 }
 
 void			ft_colorprint(t_env *env, t_file *file, int spaces)
@@ -658,7 +884,7 @@ t_data				ft_longdatatab(int i)
 		{&ft_uidsize, &ft_uidprint},
 		{&ft_gidsize, &ft_gidprint},
 		{NULL, NULL},
-//		{&ft_sizesize, &ft_sizeprint},
+		{&ft_sizesize, &ft_sizeprint},
 //		{NULL, &ft_timeprint},
 		{NULL, &ft_colorprint},
 		{NULL, &ft_nameprint},

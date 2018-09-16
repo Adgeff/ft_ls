@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:38:41 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/14 11:43:44 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/16 19:29:12 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,12 @@
 
 # define DEF_LSCOLORS		"exfxcxdxbxegedabagacad"
 # define DEF_BLOCKSIZE		512
+
+# define KBYTES(o)			(o >> 10)
+# define MBYTES(o)			(o >> 20)
+# define GBYTES(o)			(o >> 30)
+# define TBYTES(o)			(o >> 40)
+# define PBYTES(o)			(o >> 50)
 
 typedef enum			e_n_mask
 {
@@ -121,7 +127,7 @@ typedef struct			s_env
 	int					(*gidsize_f)(struct s_env *, t_file *);
 	void				(*gidprint_f)(struct s_env *, t_file *);
 	int					(*sizesize_f)(struct s_env *, t_file *);
-	void				(*sizeprint_f)(struct s_env *, t_file *);
+	void				(*sizeprint_f)(struct s_env *, t_file *, int spaces);
 }						t_env;
 
 typedef struct			s_ftype
