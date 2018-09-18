@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:38:41 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/16 19:29:12 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/18 14:09:00 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 # include <pwd.h>
 # include <grp.h>
 # include <uuid/uuid.h>
+# include <locale.h>
+# include <langinfo.h>
 
 /*
 **							default values for env variables
@@ -37,12 +39,7 @@
 
 # define DEF_LSCOLORS		"exfxcxdxbxegedabagacad"
 # define DEF_BLOCKSIZE		512
-
-# define KBYTES(o)			(o >> 10)
-# define MBYTES(o)			(o >> 20)
-# define GBYTES(o)			(o >> 30)
-# define TBYTES(o)			(o >> 40)
-# define PBYTES(o)			(o >> 50)
+# define SIXMONTHS			15724800
 
 typedef enum			e_n_mask
 {
@@ -74,7 +71,7 @@ typedef enum			e_l_mask
 	l_name_mask = 0x00001000,
 	l_colorend_mask = 0x00002000,
 	l_suffix_mask = 0x00004000,
-	l_link_mask = 0x000080000,
+	l_link_mask = 0x00008000,
 
 	l_mode_mask = (l_type_mask | l_perms_mask | l_eaacl_mask),
 	l_color_mask = (l_colorstart_mask | l_colorend_mask),
@@ -109,6 +106,7 @@ typedef struct			s_env
 	char				***colortab;
 	char				colorcode[22];
 	long long			blocksize;
+	time_t				now;
 	t_file				*badargs;
 	t_file				*fileargs;
 	t_file				*dirargs;
@@ -127,7 +125,8 @@ typedef struct			s_env
 	int					(*gidsize_f)(struct s_env *, t_file *);
 	void				(*gidprint_f)(struct s_env *, t_file *);
 	int					(*sizesize_f)(struct s_env *, t_file *);
-	void				(*sizeprint_f)(struct s_env *, t_file *, int spaces);
+	void				(*sizeprint_f)(struct s_env *, t_file *);
+	void				(*timeprint_f)(struct s_env *, t_file *);
 }						t_env;
 
 typedef struct			s_ftype
@@ -198,14 +197,20 @@ int						ft_bigfopt(t_env *env, char opt);
 int						ft_biggopt(t_env *env, char opt);
 int						ft_bigropt(t_env *env, char opt);
 int						ft_bigsopt(t_env *env, char opt);
+int						ft_bigtopt(t_env *env, char opt);
 int						ft_biguopt(t_env *env, char opt);
 int						ft_aopt(t_env *env, char opt);
 int						ft_copt(t_env *env, char opt);
 int						ft_dopt(t_env *env, char opt);
 int						ft_fopt(t_env *env, char opt);
+int						ft_gopt(t_env *env, char opt);
+int						ft_hopt(t_env *env, char opt);
 int						ft_iopt(t_env *env, char opt);
 int						ft_kopt(t_env *env, char opt);
+int						ft_lopt(t_env *env, char opt);
 int						ft_mopt(t_env *env, char opt);
+int						ft_nopt(t_env *env, char opt);
+int						ft_oopt(t_env *env, char opt);
 int						ft_popt(t_env *env, char opt);
 int						ft_ropt(t_env *env, char opt);
 int						ft_sopt(t_env *env, char opt);
@@ -268,6 +273,14 @@ char					*ft_strrchr(char *str, char c);
 **						others
 */
 
+int						ft_uididsize(t_env *env, t_file *file);
+void					ft_uididprint(t_env *env, t_file *file);
+int						ft_gididsize(t_env *env, t_file *file);
+void					ft_gididprint(t_env *env, t_file *file);
+int						ft_sizeunitsize(t_env *env, t_file *file);
+void					ft_sizeunitprint(t_env *env, t_file *file);
+void					ft_longtimeprint(t_env *env, t_file *file);
+void					ft_print_long(t_env *env);
 void					ft_config_blocksize(t_env *env);
 t_ftype					ft_ftypetab(int i);
 char					*ft_getsuffixbigf(mode_t mode);

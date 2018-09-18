@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 12:13:10 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/14 02:43:54 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/18 12:29:47 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,20 @@ t_opt				ft_opttab(int i)
 		{'G', &ft_biggopt},
 		{'R', &ft_bigropt},
 		{'S', &ft_bigsopt},
+		{'T', &ft_bigtopt},
 		{'U', &ft_biguopt},
 		{'a', &ft_aopt},
 		{'c', &ft_copt},
 		{'d', &ft_dopt},
 		{'f', &ft_fopt},
+		{'g', &ft_gopt},
+		{'h', &ft_hopt},
 		{'i', &ft_iopt},
 		{'k', &ft_kopt},
+		{'l', &ft_lopt},
 		{'m', &ft_mopt},
+		{'n', &ft_nopt},
+		{'o', &ft_oopt},
 		{'p', &ft_popt},
 		{'r', &ft_ropt},
 		{'s', &ft_sopt},

@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 17:38:04 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/14 04:17:23 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/18 14:10:17 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,13 @@ int		ft_bigsopt(t_env *env, char opt)
 	return (0);
 }
 
+int		ft_bigtopt(t_env *env, char opt)
+{
+	(void)opt;
+	env->timeprint_f = &ft_longtimeprint;
+	return (0);
+}
+
 int		ft_biguopt(t_env *env, char opt)
 {
 	(void)opt;
@@ -87,6 +94,21 @@ int		ft_fopt(t_env *env, char opt)
 	return (0);
 }
 
+int		ft_gopt(t_env *env, char opt)
+{
+	(void)opt;
+	env->long_mask = env->long_mask & ~l_uid_mask;
+	return (ft_lopt(env, opt));
+}
+
+int		ft_hopt(t_env *env, char opt)
+{
+	(void)opt;
+	env->sizesize_f = &ft_sizeunitsize;
+	env->sizeprint_f = &ft_sizeunitprint;
+	return (0);
+}
+
 int		ft_iopt(t_env *env, char opt)
 {
 	(void)opt;
@@ -102,11 +124,39 @@ int		ft_kopt(t_env *env, char opt)
 	return (0);
 }
 
+int		ft_lopt(t_env *env, char opt)
+{
+	(void)opt;
+	if (!env->blocksize)
+		ft_config_blocksize(env);
+	env->now = time(NULL);
+	env->print_f = &ft_print_long;
+	env->total = 2;
+	return (0);
+}
+
 int		ft_mopt(t_env *env, char opt)
 {
 	(void)opt;
 	env->print_f = &ft_print_comma;
 	return (0);
+}
+
+int		ft_nopt(t_env *env, char opt)
+{
+	(void)opt;
+	env->uidsize_f = &ft_uididsize;
+	env->uidprint_f = &ft_uididprint;
+	env->gidsize_f = &ft_gididsize;
+	env->gidprint_f = &ft_gididprint;
+	return (ft_lopt(env, opt));
+}
+
+int		ft_oopt(t_env *env, char opt)
+{
+	(void)opt;
+	env->long_mask = env->long_mask & ~l_gid_mask;
+	return (ft_lopt(env, opt));
 }
 
 int		ft_popt(t_env *env, char opt)
