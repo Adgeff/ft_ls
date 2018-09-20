@@ -6,7 +6,7 @@
 #    By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/24 17:11:19 by geargenc          #+#    #+#              #
-#    Updated: 2018/09/06 21:53:41 by geargenc         ###   ########.fr        #
+#    Updated: 2018/09/20 15:39:45 by geargenc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ NAME			=	ft_ls
 
 CC				= 	gcc
 
-CFLAGS			=	-Wall -Wextra -Werror -I includes
+CFLAGS			=	-Wall -Wextra -Werror -I includes -fsanitize=address
 
 FILES			=	ft_cmp.c\
 					ft_exeperm.c\

@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 17:38:04 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/18 14:10:17 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/20 14:45:54 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,13 @@ int		ft_bigaopt(t_env *env, char opt)
 {
 	(void)opt;
 	env->select_f = &ft_nodot_select;
+	return (0);
+}
+
+int		ft_bigcopt(t_env *env, char opt)
+{
+	(void)opt;
+	env->print_f = &ft_print_colvert;
 	return (0);
 }
 
@@ -30,11 +37,14 @@ int		ft_bigfopt(t_env *env, char opt)
 
 int		ft_biggopt(t_env *env, char opt)
 {
-	if (ft_config_colors(env))
-		return (1);
-	env->normal_mask = env->normal_mask | n_color_mask;
-	env->long_mask = env->long_mask | l_color_mask;
 	(void)opt;
+	if (isatty(1) || getenv("CLICOLOR_FORCE"))
+	{
+		if (ft_config_colors(env))
+		return (1);
+		env->normal_mask = env->normal_mask | n_color_mask;
+		env->long_mask = env->long_mask | l_color_mask;
+	}
 	return (0);
 }
 
@@ -127,6 +137,7 @@ int		ft_kopt(t_env *env, char opt)
 int		ft_lopt(t_env *env, char opt)
 {
 	(void)opt;
+	setlocale(LC_ALL, getenv("LANG"));
 	if (!env->blocksize)
 		ft_config_blocksize(env);
 	env->now = time(NULL);
@@ -197,6 +208,20 @@ int		ft_uopt(t_env *env, char opt)
 {
 	(void)opt;
 	env->gettime_f = &ft_getatime;
+	return (0);
+}
+
+int		ft_xopt(t_env *env, char opt)
+{
+	(void)opt;
+	env->print_f = &ft_print_colhor;
+	return (0);
+}
+
+int		ft_1opt(t_env *env, char opt)
+{
+	(void)opt;
+	env->print_f = &ft_print_oebl;
 	return (0);
 }
 

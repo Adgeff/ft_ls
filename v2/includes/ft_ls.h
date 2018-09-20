@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:38:41 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/18 14:09:00 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/20 14:51:45 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # include <uuid/uuid.h>
 # include <locale.h>
 # include <langinfo.h>
+# include <sys/ioctl.h>
 
 /*
 **							default values for env variables
@@ -100,6 +101,7 @@ typedef struct			s_env
 	char				buf[BUFF_SIZE];
 	int					fd;
 	ssize_t				size;
+	int					ws_col;
 	int					total;
 	t_n_mask			normal_mask;
 	t_l_mask			long_mask;
@@ -156,6 +158,15 @@ typedef struct			s_data
 	void				(*print)(t_env *, t_file *, int);
 }						t_data;
 
+typedef struct			s_colp
+{
+	int					listsize;
+	int					maxdatasize;
+	int					lines;
+	int					maxbyline;
+	int					total;					
+}						t_colp;
+
 /*
 **						ft_comp.c
 */
@@ -193,6 +204,7 @@ t_file					*ft_rev_list(t_env *env, t_file *list,
 */
 
 int						ft_bigaopt(t_env *env, char opt);
+int						ft_bigcopt(t_env *env, char opt);
 int						ft_bigfopt(t_env *env, char opt);
 int						ft_biggopt(t_env *env, char opt);
 int						ft_bigropt(t_env *env, char opt);
@@ -216,6 +228,8 @@ int						ft_ropt(t_env *env, char opt);
 int						ft_sopt(t_env *env, char opt);
 int						ft_topt(t_env *env, char opt);
 int						ft_uopt(t_env *env, char opt);
+int						ft_xopt(t_env *env, char opt);
+int						ft_1opt(t_env *env, char opt);
 int						ft_illegalopt(t_env *env, char opt);
 
 /*
@@ -273,6 +287,8 @@ char					*ft_strrchr(char *str, char c);
 **						others
 */
 
+void					ft_print_colhor(t_env *env);
+void					ft_print_colvert(t_env *env);
 int						ft_uididsize(t_env *env, t_file *file);
 void					ft_uididprint(t_env *env, t_file *file);
 int						ft_gididsize(t_env *env, t_file *file);

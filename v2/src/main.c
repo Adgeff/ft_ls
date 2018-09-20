@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:34:55 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/18 14:07:47 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/09/20 15:38:47 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -820,6 +820,19 @@ void			ft_colorprint(t_env *env, t_file *file, int spaces)
 		color_f(env, file->stat.st_mode)[1]);
 }
 
+int				ft_namesize(t_env *env, t_file *file)
+{
+	char		*name;
+	int			i;
+
+	(void)env;
+	name = file->name;
+	i = 0;
+	while (name[i])
+		i++;
+	return (i);
+}
+
 void			ft_nameprint(t_env *env, t_file *file, int spaces)
 {
 	(void)spaces;
@@ -831,6 +844,14 @@ void			ft_endcolorprint(t_env *env, t_file *file, int spaces)
 	(void)spaces;
 	ft_fillbuff(env, 1, ft_ftypetab((file->stat.st_mode >> 12) & 017).
 		color_f(env, file->stat.st_mode)[2]);
+}
+
+int				ft_suffixsize(t_env *env, t_file *file)
+{
+	if (*env->getsuffix_f(file->stat.st_mode))
+		return (1);
+	else
+		return (0);
 }
 
 void			ft_suffixprint(t_env *env, t_file *file, int spaces)
@@ -847,7 +868,7 @@ void			ft_linkprint(t_env *env, t_file *file, int spaces)
 	if (S_ISLNK(file->stat.st_mode))
 	{
 		ft_fillbuff(env, 1, " -> ");
-		readlink(file->path, buf, sizeof(buf));
+		buf[readlink(file->path, buf, sizeof(buf))] = '\0';
 		ft_fillbuff(env, 1, buf);
 	}
 }
@@ -861,6 +882,20 @@ t_data				ft_normaldatatab(int i)
 		{NULL, &ft_nameprint},
 		{NULL, &ft_endcolorprint},
 		{NULL, &ft_suffixprint}
+	};
+
+	return (normaldatatab[i]);
+}
+
+t_data				ft_coldatatab(int i)
+{
+	static t_data	normaldatatab[] = {
+		{&ft_inodesize, &ft_inodeprint},
+		{&ft_blockssize, &ft_blocksprint},
+		{NULL, &ft_colorprint},
+		{&ft_namesize, &ft_nameprint},
+		{NULL, &ft_endcolorprint},
+		{&ft_suffixsize, &ft_suffixprint}
 	};
 
 	return (normaldatatab[i]);
@@ -959,9 +994,8 @@ void			ft_config_blocksize(t_env *env)
 		env->blocksize = env->blocksize / 512 * 512;
 }
 
-void			ft_config(t_env *env)
+void				ft_config_functions(t_env *env)
 {
-	env->size = 0;
 	env->readarg_f = &ft_defreadarg;
 	env->sort_f = &ft_merge_sort;
 	env->cmp_f = &ft_ascii_cmp;
@@ -970,6 +1004,29 @@ void			ft_config(t_env *env)
 	env->select_f = &ft_nohidden_select;
 	env->gettime_f = &ft_getmtime;
 	env->getsuffix_f = NULL;
+	env->uidsize_f = &ft_uidnamesize;
+	env->uidprint_f = &ft_uidnameprint;
+	env->gidsize_f = &ft_gidnamesize;
+	env->gidprint_f = &ft_gidnameprint;
+	env->sizesize_f = &ft_sizebytesize;
+	env->sizeprint_f = &ft_sizebyteprint;
+	env->timeprint_f = &ft_shorttimeprint;
+}
+
+void				ft_config_term(t_env *env)
+{
+	struct winsize	win;
+
+	ioctl(1, TIOCGWINSZ, &win);
+	env->ws_col = win.ws_col;
+	env->print_f = &ft_print_colvert;
+}
+
+void				ft_config(t_env *env)
+{
+	ft_config_functions(env);
+	env->ws_col = 80;
+	env->size = 0;
 	env->total = 0;
 	env->normal_mask = n_def_mask;
 	env->long_mask = l_def_mask;
@@ -978,14 +1035,8 @@ void			ft_config(t_env *env)
 	env->badargs = NULL;
 	env->fileargs = NULL;
 	env->dirargs = NULL;
-	//
-	env->uidsize_f = &ft_uidnamesize;
-	env->uidprint_f = &ft_uidnameprint;
-	env->gidsize_f = &ft_gidnamesize;
-	env->gidprint_f = &ft_gidnameprint;
-	env->sizesize_f = &ft_sizebytesize;
-	env->sizeprint_f = &ft_sizebyteprint;
-	env->timeprint_f = &ft_shorttimeprint;
+	if (isatty(1))
+		ft_config_term(env);
 }
 
 time_t			ft_getbirthtime(struct stat *stat)
@@ -1113,7 +1164,7 @@ void			ft_normalsize(t_env *env, t_file *list, int *size)
 	while (env->normal_mask >> i)
 	{
 		if ((env->normal_mask >> i) & 1 && ft_normaldatatab(i).size)
-			size[i] = ft_getmax(env, list, i, ft_longdatatab(i).size);
+			size[i] = ft_getmax(env, list, i, ft_normaldatatab(i).size);
 		i++;
 	}
 }
@@ -1127,6 +1178,19 @@ void			ft_longsize(t_env *env, t_file *list, int *size)
 	{
 		if ((env->long_mask >> i) & 1 && ft_longdatatab(i).size)
 			size[i] = ft_getmax(env, list, i, ft_longdatatab(i).size);
+		i++;
+	}
+}
+
+void			ft_colsize(t_env *env, t_file *list, int *size)
+{
+	int			i;
+
+	i = 0;
+	while (env->normal_mask >> i)
+	{
+		if ((env->normal_mask >> i) & 1 && ft_coldatatab(i).size)
+			size[i] = ft_getmax(env, list, i, ft_coldatatab(i).size);
 		i++;
 	}
 }
@@ -1153,6 +1217,19 @@ void			ft_longprint(t_env *env, t_file *file, int *size)
 	{
 		if ((env->long_mask >> i) & 1)
 			ft_longdatatab(i).print(env, file, size[i] - file->size[i]);
+		i++;
+	}
+}
+
+void			ft_colprint(t_env *env, t_file *file, int *size)
+{
+	int			i;
+
+	i = 0;
+	while (env->normal_mask >> i)
+	{
+		if ((env->normal_mask >> i) & 1)
+			ft_coldatatab(i).print(env, file, size[i] - file->size[i]);
 		i++;
 	}
 }
@@ -1198,14 +1275,186 @@ void			ft_print_oebl(t_env *env)
 	}
 }
 
+int				ft_getmaxfiledatasize(t_env *env, int *size)
+{
+	int			maxsize;
+	int			i;
+
+	maxsize = 0;
+	i = 0;
+	while (env->normal_mask >> i)
+	{
+		if ((env->normal_mask >> i) & 1 && ft_coldatatab(i).size)
+			maxsize = maxsize + size[i];
+		i++;
+	}
+	return (maxsize);
+}
+
+int				ft_getlistsize(t_file *list)
+{
+	int			i;
+
+	i = 0;
+	while (list)
+	{
+		i++;
+		list = list->next;
+	}
+	return (i);
+}
+
+void			ft_get_colp(t_env *env, t_file *list, int *size, t_colp *colp)
+{
+	size[5] = 1;
+	colp->listsize = ft_getlistsize(list);
+	colp->maxdatasize = ft_getmaxfiledatasize(env, size);
+	colp->maxdatasize = (colp->maxdatasize + 8) / 8 * 8;
+	colp->maxbyline = env->ws_col / colp->maxdatasize;
+	if (colp->maxbyline == 0)
+		colp->maxbyline = 1;
+	colp->lines = (colp->listsize + colp->maxbyline - 1) / colp->maxbyline;
+	colp->total = colp->lines * colp->maxbyline;
+}
+
+void			ft_order_colvert(t_file *list, t_colp *colp, t_file **order)
+{
+	int			i;
+
+	i = 0;
+	while (i < colp->total)
+	{
+		if (list)
+		{
+			order[i % colp->lines * colp->maxbyline + i / colp->lines] = list;
+			list = list->next;
+		}
+		else
+			order[i % colp->lines * colp->maxbyline + i / colp->lines] = NULL;
+		i++;
+	}
+}
+
+void			ft_order_colhor(t_file *list, t_colp *colp, t_file **order)
+{
+	int			i;
+
+	i = 0;
+	while (i < colp->total)
+	{
+		if (list)
+		{
+			order[i] = list;
+			list = list->next;
+		}
+		else
+			order[i] = NULL;
+		i++;
+	}
+}
+
+int				ft_getfiledatasize(t_env *env, t_file *file, int *size)
+{
+	int			i;
+	int			datasize;
+
+	i = 0;
+	datasize = 0;
+	while (env->normal_mask >> i)
+	{
+		if ((env->normal_mask >> i) & 1 && ft_coldatatab(i).size)
+			datasize = datasize + size[i];
+		i++;
+	}
+	datasize = datasize - size[3] + file->size[3];
+	if (env->normal_mask & n_suffix_mask)
+		datasize = datasize - size[5] + file->size[5];
+	return (datasize);
+}
+
+void			ft_col_print(t_env *env, t_colp *colp,
+				t_file **order, int *size)
+{
+	int			i;
+	int			j;
+	int			spaces;
+
+	j = 0;
+	while (j < colp->lines)
+	{
+		i = 0;
+		while (i < colp->maxbyline && order[j * colp->maxbyline + i])
+		{
+			ft_colprint(env, order[j * colp->maxbyline + i], size);
+			if (i + 1 < colp->maxbyline && order[j * colp->maxbyline + i + 1])
+			{
+				spaces = colp->maxdatasize - ft_getfiledatasize(env,
+					order[j * colp->maxbyline + i], size);
+				spaces = (spaces + 7) / 8;
+				while (spaces--)
+					ft_fillbuff_c(env, 1, '\t');
+			}
+			i++;
+		}
+		ft_fillbuff_c(env, 1, '\n');
+		j++;
+	}
+}
+
+void			ft_print_colvert(t_env *env)
+{
+	t_file		*list;
+	int			size[6];
+	t_colp		colp;
+	t_file		**order;
+
+	list = env->fileargs;
+	ft_colsize(env, list, size);
+	ft_get_colp(env, list, size, & colp);
+	if (!(order = (t_file **)malloc(colp.total * sizeof(t_file *))))
+		ft_print_oebl(env);
+	else
+	{
+		ft_order_colvert(list, &colp, order);
+		if (list && env->total & 1)
+			ft_totalprint(env, list);
+		ft_col_print(env, &colp, order, size);
+		free(order);
+	}
+}
+
+void			ft_print_colhor(t_env *env)
+{
+	t_file		*list;
+	int			size[6];
+	t_colp		colp;
+	t_file		**order;
+
+	list = env->fileargs;
+	ft_colsize(env, list, size);
+	ft_get_colp(env, list, size, & colp);
+	if (!(order = (t_file **)malloc(colp.total * sizeof(t_file *))))
+		ft_print_oebl(env);
+	else
+	{
+		ft_order_colhor(list, &colp, order);
+		if (list && env->total & 1)
+			ft_totalprint(env, list);
+		ft_col_print(env, &colp, order, size);
+		free(order);
+	}
+}
+
 void			ft_print_comma(t_env *env)
 {
 	t_file		*list;
+	int			size[6];
 
 	list = env->fileargs;
+	ft_normalsize(env, list, size);
 	while (list)
 	{
-		ft_fillbuff(env, 1, list->name);
+		ft_normalprint(env, list, size);
 		if (list->next)
 			ft_fillbuff(env, 1, ", ");
 		else
@@ -1428,7 +1677,6 @@ int				main(int argc, char **argv)
 {
 	t_env		env;
 
-	setlocale(LC_ALL, getenv("LANG"));
 	env.argc = argc;
 	env.prog_name = argv[0];
 	env.argv = argv;
