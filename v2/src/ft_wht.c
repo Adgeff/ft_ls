@@ -1,37 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_no_sort.c                                       :+:      :+:    :+:   */
+/*   ft_wht.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/06/08 14:13:22 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/03 12:06:29 by geargenc         ###   ########.fr       */
+/*   Created: 2018/10/01 14:34:02 by geargenc          #+#    #+#             */
+/*   Updated: 2018/10/01 14:34:20 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-static t_file	*ft_rev_list_loop(t_file *list)
+char			**ft_whtcolor(t_env *env, mode_t mode)
 {
-	t_file		*ret;
-
-	if (list->next)
-		ret = ft_rev_list_loop(list->next);
-	else
-		return (list);
-	list->next->next = list;
-	return (ret);
+	(void)mode;
+	return (env->colortab[0]);
 }
 
-t_file			*ft_rev_list(t_env *env, t_file *list,
-				int (*cmp)(t_env *, t_file *, t_file *))
+char			*ft_whtsuffix(mode_t mode)
 {
-	t_file		*ret;
+	static char	*all = "%";
 
-	(void)env;
-	(void)cmp;
-	ret = ft_rev_list_loop(list);
-	list->next = NULL;
-	return (ret);
+	(void)mode;
+	return (all);
 }

@@ -6,7 +6,7 @@
 #    By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/24 17:11:19 by geargenc          #+#    #+#              #
-#    Updated: 2018/09/20 15:39:45 by geargenc         ###   ########.fr        #
+#    Updated: 2018/10/01 21:42:28 by geargenc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,20 +16,74 @@ NAME			=	ft_ls
 
 CC				= 	gcc
 
-CFLAGS			=	-Wall -Wextra -Werror -I includes -fsanitize=address
+CFLAGS			=	-Wall -Wextra -Werror -I includes
 
-FILES			=	ft_cmp.c\
+FILES			=	ft_addarg.c\
+					ft_badargs.c\
+					ft_blk.c\
+					ft_blocks.c\
+					ft_buff.c\
+					ft_chr.c\
+					ft_cmp_f.c\
+					ft_color.c\
+					ft_config_blocksize.c\
+					ft_config_colors1.c\
+					ft_config_colors2.c\
+					ft_config.c\
+					ft_datatab.c\
+					ft_dir.c\
+					ft_dirtitle_f.c\
 					ft_exeperm.c\
-					ft_merge_sort.c\
-					ft_no_sort.c\
+					ft_explore_f.c\
+					ft_explore_tools.c\
+					ft_fifo.c\
+					ft_fileargs.c\
+					ft_freecolortab.c\
+					ft_freelist.c\
+					ft_ftypetab.c\
+					ft_getsuffix_f.c\
+					ft_gettime_f.c\
+					ft_gid.c\
+					ft_gidprint_f.c\
+					ft_gidsize_f.c\
+					ft_inode.c\
+					ft_link.c\
+					ft_lnk.c\
+					ft_majmin.c\
+					ft_mode.c\
+					ft_name.c\
+					ft_nlink.c\
 					ft_optset1.c\
 					ft_permtabs.c\
+					ft_print_col_tools1.c\
+					ft_print_col_tools2.c\
+					ft_print_f.c\
+					ft_print_size.c\
+					ft_print.c\
 					ft_readarg_f.c\
 					ft_readargv.c\
 					ft_readperm.c\
+					ft_reg.c\
+					ft_select_f.c\
+					ft_size.c\
+					ft_sizeprint_f.c\
+					ft_sizesize_f.c\
+					ft_sock.c\
+					ft_sort_f.c\
+					ft_sort_tools.c\
+					ft_suffix.c\
+					ft_time.c\
+					ft_timeprint_f.c\
+					ft_timetools.c\
+					ft_totalprint.c\
+					ft_uid.c\
+					ft_uidprint_f.c\
+					ft_uidsize_f.c\
+					ft_wht.c\
 					ft_writeperm.c\
 					main.c\
-					str_tools.c
+					str_tools1.c\
+					str_tools2.c
 
 SRC_DIR			=	src/
 

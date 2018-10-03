@@ -21,7 +21,7 @@ int				ft_defreadarg(t_env *env, char *arg)
 	name = name ? name + 1 : arg;
 	if (!(file = (t_file *)malloc(sizeof(t_file))))
 		return (1);
-	if (lstat(arg, &(file->stat)))
+	if (stat(arg, &(file->stat)))
 	{
 		if (ft_addarg(&(env->badargs), ft_strdup(arg),
 			ft_strdup(strerror(errno)), file))
@@ -43,7 +43,7 @@ int				ft_nodirsreadarg(t_env *env, char *arg)
 
 	if (!(file = (t_file *)malloc(sizeof(t_file))))
 		return (1);
-	if (lstat(arg, &(file->stat)))
+	if (stat(arg, &(file->stat)))
 	{
 		if (ft_addarg(&(env->badargs), ft_strdup(arg),
 			ft_strdup(strerror(errno)), file))
