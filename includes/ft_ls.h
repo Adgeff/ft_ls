@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:38:41 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/04 02:10:44 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 03:24:42 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ typedef struct			s_env
 	t_file				*badargs;
 	t_file				*fileargs;
 	t_file				*dirargs;
-	int					(*cmp_f)(struct s_env *, t_file *, t_file *);
+	long				(*cmp_f)(struct s_env *, t_file *, t_file *);
 	void				(*dirtitle_f)(struct s_env *env);
 	int					(*explore_f)(struct s_env *env);
 	char				*(*getsuffix_f)(mode_t);
@@ -138,7 +138,7 @@ typedef struct			s_env
 	void				(*sizeprint_f)(struct s_env *, t_file *);
 	int					(*sizesize_f)(struct s_env *, t_file *);
 	t_file				*(*sort_f)(struct s_env *, t_file *,
-						int (*)(struct s_env *, t_file *, t_file *));
+						long (*)(struct s_env *, t_file *, t_file *));
 	int					(*stat_f)(const char *, struct stat *);
 	void				(*timeprint_f)(struct s_env *, t_file *);
 	void				(*uidprint_f)(struct s_env *, t_file *);
@@ -235,9 +235,9 @@ char					**ft_chrcolor(t_env *env, mode_t mode);
 **						(struct s_env -> cmp_f)
 */
 
-int						ft_ascii_cmp(t_env *env, t_file *l1, t_file *l2);
-int						ft_size_cmp(t_env *env, t_file *l1, t_file *l2);
-int						ft_time_cmp(t_env *env, t_file *l1, t_file *l2);
+long					ft_ascii_cmp(t_env *env, t_file *l1, t_file *l2);
+long					ft_size_cmp(t_env *env, t_file *l1, t_file *l2);
+long					ft_time_cmp(t_env *env, t_file *l1, t_file *l2);
 
 /*
 **						ft_color.c
@@ -663,11 +663,11 @@ char					*ft_socksuffix(mode_t mode);
 */
 
 t_file					*ft_merge_sort_rev(t_env *env, t_file *list,
-						int (*cmp)(t_env *, t_file *, t_file *));
+						long (*cmp)(t_env *, t_file *, t_file *));
 t_file					*ft_merge_sort(t_env *env, t_file *list,
-						int (*cmp)(t_env *, t_file *, t_file *));
+						long (*cmp)(t_env *, t_file *, t_file *));
 t_file					*ft_rev_list(t_env *env, t_file *list,
-						int (*cmp)(t_env *, t_file *, t_file *));
+						long (*cmp)(t_env *, t_file *, t_file *));
 
 /*
 **						ft_sort_tools.c

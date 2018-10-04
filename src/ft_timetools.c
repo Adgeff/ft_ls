@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/28 16:31:43 by geargenc          #+#    #+#             */
-/*   Updated: 2018/09/28 16:39:23 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 03:29:11 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,7 @@ void	ft_hmsprint(t_env *env, int hms)
 
 void	ft_yearprint(t_env *env, int year)
 {
-	ft_fillbuff_c(env, 1, year / 1000 % 10 + '0');
-	ft_fillbuff_c(env, 1, year / 100 % 10 + '0');
-	ft_fillbuff_c(env, 1, year / 10 % 10 + '0');
+	if (year / 10)
+		ft_yearprint(env, year / 10);
 	ft_fillbuff_c(env, 1, year % 10 + '0');
 }

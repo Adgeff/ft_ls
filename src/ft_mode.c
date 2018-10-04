@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/01 14:11:33 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/01 14:12:54 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 03:58:25 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void		ft_eaaclprint(t_env *env, t_file *file, int spaces)
 	acl_t	acl;
 
 	(void)spaces;
-	if (listxattr(file->path, NULL, 0, 0) > 0)
+	if (listxattr(file->path, NULL, 0, XATTR_NOFOLLOW) > 0)
 		ft_fillbuff_c(env, 1, '@');
 	else if ((acl = acl_get_link_np(file->path, ACL_TYPE_EXTENDED)))
 	{

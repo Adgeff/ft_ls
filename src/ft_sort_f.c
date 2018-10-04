@@ -6,14 +6,14 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/16 02:32:51 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/01 21:27:47 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 03:23:03 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
 t_file		*ft_merge_sort_rev(t_env *env, t_file *list,
-			int (*cmp)(t_env *, t_file *, t_file *))
+			long (*cmp)(t_env *, t_file *, t_file *))
 {
 	t_file	*l1;
 	t_file	*l2;
@@ -38,7 +38,7 @@ t_file		*ft_merge_sort_rev(t_env *env, t_file *list,
 }
 
 t_file		*ft_merge_sort(t_env *env, t_file *list,
-			int (*cmp)(t_env *, t_file *, t_file *))
+			long (*cmp)(t_env *, t_file *, t_file *))
 {
 	t_file	*l1;
 	t_file	*l2;
@@ -63,7 +63,7 @@ t_file		*ft_merge_sort(t_env *env, t_file *list,
 }
 
 t_file		*ft_rev_list(t_env *env, t_file *list,
-			int (*cmp)(t_env *, t_file *, t_file *))
+			long (*cmp)(t_env *, t_file *, t_file *))
 {
 	t_file	*ret;
 

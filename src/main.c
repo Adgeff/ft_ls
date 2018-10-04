@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:34:55 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/04 02:40:00 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 03:32:22 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int			main(int argc, char **argv)
 	t_env	env;
 
 	env.argc = argc;
-	env.prog_name = argv[0];
+	env.prog_name = "ls";
 	env.argv = argv;
 	if (ft_ls(&env))
 		return (1);
