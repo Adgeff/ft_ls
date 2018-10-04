@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/01 14:25:45 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/01 14:26:01 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 00:46:30 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int				ft_blockssize(t_env *env, t_file *file)
 {
 	blkcnt_t	blocks;
 	int			size;
-	
+
 	blocks = (file->stat.st_blocks * 512 + (env->blocksize - 1))
 		/ env->blocksize;
 	size = 2;

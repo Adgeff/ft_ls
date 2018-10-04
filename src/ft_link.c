@@ -1,23 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_fileargs.c                                      :+:      :+:    :+:   */
+/*   ft_link.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/01 21:07:14 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/01 21:07:26 by geargenc         ###   ########.fr       */
+/*   Created: 2018/09/28 16:20:43 by geargenc          #+#    #+#             */
+/*   Updated: 2018/10/04 02:27:05 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void	ft_fileargs(t_env *env)
+void		ft_linkprint(t_env *env, t_file *file, int spaces)
 {
-	env->fileargs = env->sort_f(env, env->fileargs, env->cmp_f);
-	env->print_f(env);
-	ft_freelist(env->fileargs);
-	env->fileargs = NULL;
-	if (env->dirargs)
-		ft_fillbuff_c(env, 1, '\n');
+	char	buf[1023];
+	int		ret;
+
+	(void)spaces;
+	if ((ret = readlink(file->path, buf, sizeof(buf))) > 0)
+	{
+		buf[ret] = '\0';
+		ft_fillbuff(env, 1, " -> ");
+		ft_fillbuff(env, 1, buf);
+	}
 }

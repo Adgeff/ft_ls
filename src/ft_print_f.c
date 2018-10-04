@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/01 20:17:07 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/01 20:19:09 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/03 23:59:31 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void		ft_print_colhor(t_env *env)
 
 	list = env->fileargs;
 	ft_colsize(env, list, size);
-	ft_get_colp(env, list, size, & colp);
+	ft_get_colp(env, list, size, &colp);
 	if (!(order = (t_file **)malloc(colp.total * sizeof(t_file *))))
 		ft_print_oebl(env);
 	else
@@ -43,7 +43,7 @@ void		ft_print_colvert(t_env *env)
 
 	list = env->fileargs;
 	ft_colsize(env, list, size);
-	ft_get_colp(env, list, size, & colp);
+	ft_get_colp(env, list, size, &colp);
 	if (!(order = (t_file **)malloc(colp.total * sizeof(t_file *))))
 		ft_print_oebl(env);
 	else

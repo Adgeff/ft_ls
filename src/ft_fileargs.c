@@ -1,33 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_badargs.c                                       :+:      :+:    :+:   */
+/*   ft_fileargs.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/01 21:05:28 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/01 21:05:44 by geargenc         ###   ########.fr       */
+/*   Created: 2018/10/01 21:07:14 by geargenc          #+#    #+#             */
+/*   Updated: 2018/10/04 02:39:53 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void		ft_badargs(t_env *env)
+void	ft_fileargs(t_env *env)
 {
-	t_file	*list;
-
-	env->badargs = ft_rev_list(env, env->badargs, &ft_ascii_cmp);
-	list = env->badargs;
-	while (list)
-	{
-		ft_fillbuff(env, 2, env->prog_name);
-		ft_fillbuff(env, 2, ": ");
-		ft_fillbuff(env, 2, list->name);
-		ft_fillbuff(env, 2, ": ");
-		ft_fillbuff(env, 2, list->path);
-		ft_fillbuff(env, 2, "\n");
-		list = list->next;
-	}
-	ft_freelist(env->badargs);
-	env->badargs = NULL;
+	env->fileargs = env->sort_f(env, env->fileargs, env->cmp_f);
+	env->print_f(env);
+	ft_freelist(env->fileargs);
+	env->fileargs = NULL;
+	if (env->dirargs)
+		ft_fillbuff_c(env, 1, '\n');
 }
