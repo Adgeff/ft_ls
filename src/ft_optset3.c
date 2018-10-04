@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 02:32:29 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/04 02:32:40 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 04:24:31 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ int		ft_dopt(t_env *env, char opt)
 {
 	(void)opt;
 	env->readarg_f = &ft_nodirsreadarg;
-	if (!env->stat_f)
-		env->stat_f = &lstat;
 	return (0);
 }
 

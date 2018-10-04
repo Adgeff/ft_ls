@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 17:43:31 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/04 03:05:58 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 04:24:59 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int				ft_defreadarg(t_env *env, char *arg)
 
 	if (!(file = (t_file *)malloc(sizeof(t_file))))
 		return (1);
-	if (env->stat_f(arg, &(file->stat)))
+	if (lstat(arg, &(file->stat)))
 	{
 		if (ft_addarg(&(env->badargs), ft_strdup(arg),
 			ft_strdup(strerror(errno)), file))
@@ -40,7 +40,7 @@ int				ft_nodirsreadarg(t_env *env, char *arg)
 
 	if (!(file = (t_file *)malloc(sizeof(t_file))))
 		return (1);
-	if (env->stat_f(arg, &(file->stat)))
+	if (lstat(arg, &(file->stat)))
 	{
 		if (ft_addarg(&(env->badargs), ft_strdup(arg),
 			ft_strdup(strerror(errno)), file))

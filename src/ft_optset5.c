@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 02:34:24 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/04 02:34:34 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 04:24:40 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ int		ft_popt(t_env *env, char opt)
 	env->getsuffix_f = &ft_getsuffixp;
 	env->normal_mask = env->normal_mask | n_suffix_mask;
 	env->long_mask = env->long_mask | l_suffix_mask;
-	if (!env->stat_f)
-		env->stat_f = &lstat;
 	return (0);
 }
 

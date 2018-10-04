@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:38:41 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/04 03:24:42 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 04:23:23 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,6 @@ typedef struct			s_env
 	int					(*sizesize_f)(struct s_env *, t_file *);
 	t_file				*(*sort_f)(struct s_env *, t_file *,
 						long (*)(struct s_env *, t_file *, t_file *));
-	int					(*stat_f)(const char *, struct stat *);
 	void				(*timeprint_f)(struct s_env *, t_file *);
 	void				(*uidprint_f)(struct s_env *, t_file *);
 	int					(*uidsize_f)(struct s_env *, t_file *);
@@ -485,8 +484,6 @@ int						ft_bigaopt(t_env *env, char opt);
 int						ft_bigcopt(t_env *env, char opt);
 int						ft_bigfopt(t_env *env, char opt);
 int						ft_biggopt(t_env *env, char opt);
-int						ft_bighopt(t_env *env, char opt);
-int						ft_bigpopt(t_env *env, char opt);
 int						ft_bigropt(t_env *env, char opt);
 int						ft_bigsopt(t_env *env, char opt);
 int						ft_bigtopt(t_env *env, char opt);

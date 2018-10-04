@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/27 10:05:50 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/04 02:05:20 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 04:25:22 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void				ft_config_functions(t_env *env)
 	env->sizeprint_f = &ft_sizebyteprint;
 	env->sizesize_f = &ft_sizebytesize;
 	env->sort_f = &ft_merge_sort;
-	env->stat_f = NULL;
 	env->timeprint_f = &ft_shorttimeprint;
 	env->uidprint_f = &ft_uidnameprint;
 	env->uidsize_f = &ft_uidnamesize;

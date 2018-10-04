@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 02:33:14 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/04 02:33:26 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 04:24:35 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,6 @@ int		ft_lopt(t_env *env, char opt)
 	env->now = time(NULL);
 	env->print_f = &ft_print_long;
 	env->total = 2;
-	if (!env->stat_f)
-		env->stat_f = &lstat;
 	return (0);
 }
 
