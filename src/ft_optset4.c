@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 02:33:14 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/04 04:24:35 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 08:42:43 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int		ft_lopt(t_env *env, char opt)
 		ft_config_blocksize(env);
 	env->now = time(NULL);
 	env->print_f = &ft_print_long;
-	env->total = 2;
+	env->link_arg = env->link_arg & la_disable_mask;
 	return (0);
 }
 
@@ -51,5 +51,6 @@ int		ft_mopt(t_env *env, char opt)
 {
 	(void)opt;
 	env->print_f = &ft_print_comma;
+	env->link_arg = env->link_arg | la_enable_mask;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/01 19:49:43 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/01 19:50:04 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 08:03:46 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,14 @@ void		ft_config_blocksize(t_env *env)
 	if (env->blocksize < 512)
 	{
 		env->blocksize = 512;
-		ft_fillbuff(env, 2, env->prog_name);
-		ft_fillbuff(env, 2, ": minimum blocksize is 512\n");
+		ft_putstr_fd(2, env->prog_name);
+		ft_putstr_fd(2, ": minimum blocksize is 512\n");
 	}
 	else if (env->blocksize > 1073741824)
 	{
 		env->blocksize = 1073741824;
-		ft_fillbuff(env, 2, env->prog_name);
-		ft_fillbuff(env, 2, ": maximum blocksize is 1G\n");
+		ft_putstr_fd(2, env->prog_name);
+		ft_putstr_fd(2, ": maximum blocksize is 1G\n");
 	}
 	else
 		env->blocksize = env->blocksize / 512 * 512;

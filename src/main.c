@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:34:55 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/04 03:32:22 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 07:53:59 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,9 @@ int			ft_ls(t_env *env)
 		ft_badargs(env);
 	if (env->fileargs)
 		ft_fileargs(env);
-	env->total = env->total >> 1;
+	env->total = env->total | t_dir_mask;
 	if (env->dirargs && env->explore_f(env))
 		return (1);
-	ft_writebuff(env);
 	if (env->colortab)
 		ft_freecolortab(env);
 	return (0);
@@ -36,7 +35,7 @@ int			main(int argc, char **argv)
 	t_env	env;
 
 	env.argc = argc;
-	env.prog_name = "ls";
+	env.prog_name = argv[0];
 	env.argv = argv;
 	if (ft_ls(&env))
 		return (1);

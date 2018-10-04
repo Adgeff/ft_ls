@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/01 21:09:51 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/01 21:14:11 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 07:43:40 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ void			ft_direrror(t_env *env)
 	char		*error;
 
 	error = strerror(errno);
-	ft_fillbuff(env, 2, env->prog_name);
-	ft_fillbuff(env, 2, ": ");
-	ft_fillbuff(env, 2, env->dirargs->name);
-	ft_fillbuff(env, 2, ": ");
-	ft_fillbuff(env, 2, error);
-	ft_fillbuff_c(env, 2, '\n');
+	ft_putstr_fd(2, env->prog_name);
+	ft_putstr_fd(2, ": ");
+	ft_putstr_fd(2, env->dirargs->name);
+	ft_putstr_fd(2, ": ");
+	ft_putstr_fd(2, error);
+	ft_putchar_fd(2, '\n');
 }
 
 int				ft_getdir(t_env *env)

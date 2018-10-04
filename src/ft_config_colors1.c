@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/01 15:01:17 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/01 15:08:04 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 08:01:42 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char					*ft_getback(t_env *env, int type)
 	return (ft_colorcode(i).background);
 }
 
-char					ft_getcharcode(t_env *env, char *envcolor, int i)
+char					ft_getcharcode(char *envcolor, int i)
 {
 	int					j;
 
@@ -79,13 +79,16 @@ char					ft_getcharcode(t_env *env, char *envcolor, int i)
 		ft_colorcode(j).charcode != envcolor[i] &&
 		ft_colorcode(j).charcode != envcolor[i] + ('a' - '0'))
 		j++;
+	if (ft_colorcode(j).charcode == envcolor[i] + ('a' - '0'))
+		ft_putstr_fd(2, "warn: LSCOLORS should use characters a-h instead of "
+			"0-9 (see the manual page)\n");
 	if (ft_colorcode(j).charcode)
 		return (ft_colorcode(j).charcode);
 	else
 	{
-		ft_fillbuff(env, 2, "error: invalid character '");
-		ft_fillbuff_c(env, 2, envcolor[i]);
-		ft_fillbuff(env, 2, "' in LSCOLORS env var\n");
+		ft_putstr_fd(2, "error: invalid character '");
+		ft_putchar_fd(2, envcolor[i]);
+		ft_putstr_fd(2, "' in LSCOLORS env var\n");
 		return ('x');
 	}
 }
@@ -102,7 +105,7 @@ void					ft_getcolorcode(t_env *env)
 	i = 0;
 	while (defcolor[i] && envcolor[i])
 	{
-		env->colorcode[i] = ft_getcharcode(env, envcolor, i);
+		env->colorcode[i] = ft_getcharcode(envcolor, i);
 		i++;
 	}
 	while (defcolor[i])

@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/01 20:17:07 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/03 23:59:31 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 07:27:05 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void		ft_print_colhor(t_env *env)
 	else
 	{
 		ft_order_colhor(list, &colp, order);
-		if (list && env->total & 1)
+		if (list && (env->total & t_nprint_mask) == t_nprint_mask)
 			ft_totalprint(env, list);
 		ft_col_print(env, &colp, order, size);
 		free(order);
@@ -49,7 +49,7 @@ void		ft_print_colvert(t_env *env)
 	else
 	{
 		ft_order_colvert(list, &colp, order);
-		if (list && env->total & 1)
+		if (list && (env->total & t_nprint_mask) == t_nprint_mask)
 			ft_totalprint(env, list);
 		ft_col_print(env, &colp, order, size);
 		free(order);
@@ -81,7 +81,7 @@ void		ft_print_long(t_env *env)
 
 	list = env->fileargs;
 	ft_longsize(env, list, size);
-	if (list && env->total & 1)
+	if (list && (env->total & t_lprint_mask) == t_lprint_mask)
 		ft_totalprint(env, list);
 	while (list)
 	{
@@ -98,7 +98,7 @@ void		ft_print_oebl(t_env *env)
 
 	list = env->fileargs;
 	ft_normalsize(env, list, size);
-	if (list && env->total & 1)
+	if (list && (env->total & t_nprint_mask) == t_nprint_mask)
 		ft_totalprint(env, list);
 	while (list)
 	{

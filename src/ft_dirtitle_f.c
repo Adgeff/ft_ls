@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/01 21:30:35 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/01 21:30:55 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 07:31:20 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,13 @@
 
 void	ft_titleddir(t_env *env)
 {
-	ft_fillbuff(env, 1, env->dirargs->path);
-	ft_fillbuff(env, 1, ":\n");
+	int	i;
+
+	i = 0;
+	while (env->dirargs->path[i])
+		i++;
+	write(1, env->dirargs->path, i);
+	write(1, ":\n", 2);
 }
 
 void	ft_untitleddir(t_env *env)

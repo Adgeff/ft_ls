@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/01 21:17:16 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/04 02:44:35 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 07:11:30 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int			ft_explore(t_env *env)
 		free(tmp);
 		if (env->dirargs)
 			ft_fillbuff_c(env, 1, '\n');
+		ft_writebuff(env);
 	}
 	return (0);
 }
@@ -61,6 +62,7 @@ int			ft_recursive_explore(t_env *env)
 		env->fileargs = NULL;
 		if (env->dirargs)
 			ft_fillbuff_c(env, 1, '\n');
+		ft_writebuff(env);
 	}
 	return (0);
 }

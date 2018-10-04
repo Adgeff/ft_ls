@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/27 10:05:50 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/04 04:25:22 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 08:27:43 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ void				ft_config(t_env *env)
 	ft_config_functions(env);
 	env->ws_col = 80;
 	env->size = 0;
-	env->total = 0;
+	env->link_arg = la_def_mask;
+	env->total = t_none_mask;
 	env->normal_mask = n_def_mask;
 	env->long_mask = l_def_mask;
 	env->blocksize = 0;

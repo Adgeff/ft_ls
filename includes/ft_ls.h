@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 07:38:41 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/04 04:23:23 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 08:44:42 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@
 
 typedef enum			e_n_mask
 {
+	n_none_mask = 0x00000000,
 	n_inode_mask = 0x00000001,
 	n_blocks_mask = 0x00000002,
 	n_colorstart_mask = 0x00000004,
@@ -66,6 +67,7 @@ typedef enum			e_n_mask
 
 typedef enum			e_l_mask
 {
+	l_none_mask = 0x00000000,
 	l_inode_mask = 0x00000001,
 	l_blocks_mask = 0x00000002,
 	l_type_mask = 0x00000004,
@@ -88,6 +90,28 @@ typedef enum			e_l_mask
 	l_def_mask = (l_mode_mask | l_nlink_mask | l_uid_mask | l_gid_mask |
 		l_size_mask | l_time_mask | l_name_mask | l_link_mask)
 }						t_l_mask;
+
+typedef enum			e_t_mask
+{
+	t_none_mask = 0x00000000,
+	t_dir_mask = 0x00000001,
+	t_block_mask = 0x00000002,
+
+	t_lprint_mask = t_dir_mask,
+	t_nprint_mask = t_dir_mask | t_block_mask
+}						t_t_mask;
+
+typedef enum			e_la_mask
+{
+	la_none_mask = 0x00000000,
+	la_force_mask = 0x00000001,
+	la_enable_mask = 0x00000002,
+	la_block_mask = 0x00000004,
+
+	la_def_mask = la_enable_mask,
+	la_disable_mask = ~la_enable_mask,
+	la_unblock_mask = ~la_block_mask
+}						t_la_mask;
 
 /*
 **						Structures
@@ -115,7 +139,8 @@ typedef struct			s_env
 	int					fd;
 	ssize_t				size;
 	int					ws_col;
-	int					total;
+	int					link_arg;
+	t_t_mask			total;
 	t_n_mask			normal_mask;
 	t_l_mask			long_mask;
 	char				***colortab;
@@ -261,7 +286,7 @@ void					ft_config_blocksize(t_env *env);
 t_colorcode				ft_colorcode(int i);
 int						ft_config_colors(t_env *env);
 char					*ft_getback(t_env *env, int type);
-char					ft_getcharcode(t_env *env, char *envcolor, int i);
+char					ft_getcharcode(char *envcolor, int i);
 void					ft_getcolorcode(t_env *env);
 char					*ft_getfor(t_env *env, int type);
 int						ft_init_colortab(t_env *env);
@@ -484,6 +509,8 @@ int						ft_bigaopt(t_env *env, char opt);
 int						ft_bigcopt(t_env *env, char opt);
 int						ft_bigfopt(t_env *env, char opt);
 int						ft_biggopt(t_env *env, char opt);
+int						ft_bighopt(t_env *env, char opt);
+int						ft_bigpopt(t_env *env, char opt);
 int						ft_bigropt(t_env *env, char opt);
 int						ft_bigsopt(t_env *env, char opt);
 int						ft_bigtopt(t_env *env, char opt);

@@ -6,7 +6,7 @@
 #    By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/24 17:11:19 by geargenc          #+#    #+#              #
-#    Updated: 2018/10/04 03:33:38 by geargenc         ###   ########.fr        #
+#    Updated: 2018/10/04 09:32:06 by geargenc         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -111,7 +111,7 @@ $(DEP_DIR)%.d	:	$(SRC_DIR)%.c
 
 -include $(DEP)
 
-$(OBJ_DIR)%.o	:	$(SRC_DIR)%.c
+$(OBJ_DIR)%.o	:	$(SRC_DIR)%.c Makefile
 	@mkdir -p $(OBJ_DIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@printf "\r\E[K\033[1;33mCreated : $@\033[0m"

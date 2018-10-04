@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/05 17:43:31 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/04 04:24:59 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 08:52:45 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,11 @@ int				ft_defreadarg(t_env *env, char *arg)
 	}
 	else
 	{
+		if (env->link_arg)
+		{
+			if (!stat(arg, &file->stat) && !(file->stat.st_mode & S_IFDIR))
+				lstat(arg, &file->stat);
+		}
 		if ((file->stat.st_mode & S_IFDIR) ?
 			ft_addarg(&(env->dirargs), ft_strdup(arg), ft_strdup(arg), file) :
 			ft_addarg(&(env->fileargs), ft_strdup(arg), ft_strdup(arg), file))
@@ -46,7 +51,15 @@ int				ft_nodirsreadarg(t_env *env, char *arg)
 			ft_strdup(strerror(errno)), file))
 			return (1);
 	}
-	else if (ft_addarg(&(env->fileargs), ft_strdup(arg), ft_strdup(arg), file))
-		return (1);
+	else
+	{
+		if (env->link_arg)
+		{
+			if (!stat(arg, &file->stat) && !(file->stat.st_mode & S_IFDIR))
+				lstat(arg, &file->stat);
+		}
+		if (ft_addarg(&(env->fileargs), ft_strdup(arg), ft_strdup(arg), file))
+			return (1);
+	}
 	return (0);
 }

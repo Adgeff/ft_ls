@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/01 21:05:28 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/04 02:54:26 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 07:41:31 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@ void		ft_badargs(t_env *env)
 	list = env->badargs;
 	while (list)
 	{
-		ft_fillbuff(env, 2, env->prog_name);
-		ft_fillbuff(env, 2, ": ");
-		ft_fillbuff(env, 2, list->name);
-		ft_fillbuff(env, 2, ": ");
-		ft_fillbuff(env, 2, list->path);
-		ft_fillbuff(env, 2, "\n");
+		ft_putstr_fd(2, env->prog_name);
+		ft_putstr_fd(2, ": ");
+		ft_putstr_fd(2, list->name);
+		ft_putstr_fd(2, ": ");
+		ft_putstr_fd(2, list->path);
+		ft_putstr_fd(2, "\n");
 		list = list->next;
 	}
 	ft_freelist(env->badargs);

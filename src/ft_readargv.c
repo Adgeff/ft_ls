@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/31 12:13:10 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/04 04:24:03 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 08:44:17 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ t_opt				ft_opttab(int i)
 	static t_opt	opttab[] = {
 		{'A', &ft_bigaopt}, {'C', &ft_bigcopt},
 		{'F', &ft_bigfopt}, {'G', &ft_biggopt},
+		{'H', &ft_bighopt}, {'P', &ft_bigpopt},
 		{'R', &ft_bigropt}, {'S', &ft_bigsopt},
 		{'T', &ft_bigtopt}, {'U', &ft_biguopt},
 		{'a', &ft_aopt}, {'c', &ft_copt},
@@ -73,6 +74,8 @@ int					ft_readargs(t_env *env)
 {
 	int				i;
 
+	if (env->link_arg & la_block_mask)
+		env->link_arg = la_none_mask;
 	i = 0;
 	while (i < env->argc)
 	{

@@ -6,7 +6,7 @@
 /*   By: geargenc <geargenc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/01 21:07:14 by geargenc          #+#    #+#             */
-/*   Updated: 2018/10/04 02:39:53 by geargenc         ###   ########.fr       */
+/*   Updated: 2018/10/04 07:30:11 by geargenc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,5 @@ void	ft_fileargs(t_env *env)
 	env->fileargs = NULL;
 	if (env->dirargs)
 		ft_fillbuff_c(env, 1, '\n');
+	ft_writebuff(env);
 }
