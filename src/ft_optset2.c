@@ -39,10 +39,3 @@ int		ft_bigtopt(t_env *env, char opt)
 	env->timeprint_f = &ft_longtimeprint;
 	return (0);
 }
-
-int		ft_biguopt(t_env *env, char opt)
-{
-	(void)opt;
-	env->gettime_f = &ft_getbirthtime;
-	return (0);
-}

@@ -12,6 +12,9 @@
 
 #include "ft_ls.h"
 
+#define major(x) (((x) >> 8) & 0xff)
+#define minor(x) ((x) & 0xff)
+
 void		ft_majprint(t_env *env, t_file *file)
 {
 	dev_t	maj;

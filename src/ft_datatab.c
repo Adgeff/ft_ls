@@ -33,7 +33,7 @@ t_data				ft_longdatatab(int i)
 		{&ft_blockssize, &ft_blocksprint},
 		{NULL, &ft_typeprint},
 		{NULL, &ft_permsprint},
-		{NULL, &ft_eaaclprint},
+		{NULL, NULL},
 		{&ft_nlinksize, &ft_nlinkprint},
 		{&ft_uidsize, &ft_uidprint},
 		{&ft_gidsize, &ft_gidprint},

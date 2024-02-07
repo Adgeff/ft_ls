@@ -19,7 +19,7 @@ t_opt				ft_opttab(int i)
 		{'F', &ft_bigfopt}, {'G', &ft_biggopt},
 		{'H', &ft_bighopt}, {'P', &ft_bigpopt},
 		{'R', &ft_bigropt}, {'S', &ft_bigsopt},
-		{'T', &ft_bigtopt}, {'U', &ft_biguopt},
+		{'T', &ft_bigtopt},
 		{'a', &ft_aopt}, {'c', &ft_copt},
 		{'d', &ft_dopt}, {'f', &ft_fopt},
 		{'g', &ft_gopt}, {'h', &ft_hopt},

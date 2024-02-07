@@ -25,11 +25,9 @@
 # include <errno.h>
 # include <dirent.h>
 # include <time.h>
-# include <sys/acl.h>
 # include <sys/xattr.h>
 # include <pwd.h>
 # include <grp.h>
-# include <uuid/uuid.h>
 # include <locale.h>
 # include <langinfo.h>
 # include <sys/ioctl.h>
@@ -85,7 +83,7 @@ typedef enum			e_l_mask
 	l_suffix_mask = 0x00004000,
 	l_link_mask = 0x00008000,
 
-	l_mode_mask = (l_type_mask | l_perms_mask | l_eaacl_mask),
+	l_mode_mask = (l_type_mask | l_perms_mask),
 	l_color_mask = (l_colorstart_mask | l_colorend_mask),
 	l_def_mask = (l_mode_mask | l_nlink_mask | l_uid_mask | l_gid_mask |
 		l_size_mask | l_time_mask | l_name_mask | l_link_mask)
@@ -411,7 +409,6 @@ char					*ft_getsuffixp(mode_t mode);
 **						(struct s_env -> gettime_f)
 */
 
-time_t					ft_getbirthtime(struct stat *stat);
 time_t					ft_getatime(struct stat *stat);
 time_t					ft_getmtime(struct stat *stat);
 time_t					ft_getctime(struct stat *stat);
@@ -482,7 +479,6 @@ void					ft_majminprint(t_env *env, t_file *file);
 
 void					ft_typeprint(t_env *env, t_file *file, int spaces);
 void					ft_permsprint(t_env *env, t_file *file, int spaces);
-void					ft_eaaclprint(t_env *env, t_file *file, int spaces);
 
 /*
 **						ft_name.c
@@ -514,7 +510,6 @@ int						ft_bigpopt(t_env *env, char opt);
 int						ft_bigropt(t_env *env, char opt);
 int						ft_bigsopt(t_env *env, char opt);
 int						ft_bigtopt(t_env *env, char opt);
-int						ft_biguopt(t_env *env, char opt);
 int						ft_aopt(t_env *env, char opt);
 int						ft_copt(t_env *env, char opt);
 int						ft_dopt(t_env *env, char opt);

@@ -14,22 +14,22 @@
 
 void	ft_daymonthprint(t_env *env, struct tm *fstm)
 {
-	if (*nl_langinfo(D_MD_ORDER) == 'd')
-	{
+//	if (*nl_langinfo(D_MD_ORDER) == 'd')
+//	{
+//		ft_fillbuff_c(env, 1, (fstm->tm_mday / 10) ?
+//			fstm->tm_mday / 10 + '0' : ' ');
+//		ft_fillbuff_c(env, 1, fstm->tm_mday % 10 + '0');
+//		ft_fillbuff_c(env, 1, ' ');
+//		ft_fillbuff(env, 1, nl_langinfo(ABMON_1 + fstm->tm_mon));
+//	}
+//	else
+//	{
+		ft_fillbuff(env, 1, nl_langinfo(ABMON_1 + fstm->tm_mon));
+		ft_fillbuff_c(env, 1, ' ');
 		ft_fillbuff_c(env, 1, (fstm->tm_mday / 10) ?
 			fstm->tm_mday / 10 + '0' : ' ');
 		ft_fillbuff_c(env, 1, fstm->tm_mday % 10 + '0');
-		ft_fillbuff_c(env, 1, ' ');
-		ft_fillbuff(env, 1, nl_langinfo(ABMON_1 + fstm->tm_mon));
-	}
-	else
-	{
-		ft_fillbuff(env, 1, nl_langinfo(ABMON_1 + fstm->tm_mon));
-		ft_fillbuff_c(env, 1, ' ');
-		ft_fillbuff_c(env, 1, (fstm->tm_mday / 10) ?
-			fstm->tm_mday / 10 + '0' : ' ');
-		ft_fillbuff_c(env, 1, fstm->tm_mday % 10 + '0');
-	}
+//	}
 }
 
 void	ft_hmsprint(t_env *env, int hms)

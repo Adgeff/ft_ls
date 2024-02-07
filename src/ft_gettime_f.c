@@ -12,11 +12,6 @@
 
 #include "ft_ls.h"
 
-time_t			ft_getbirthtime(struct stat *stat)
-{
-	return (stat->st_birthtime);
-}
-
 time_t			ft_getatime(struct stat *stat)
 {
 	return (stat->st_atime);

@@ -30,20 +30,3 @@ void		ft_permsprint(t_env *env, t_file *file, int spaces)
 		i++;
 	}
 }
-
-void		ft_eaaclprint(t_env *env, t_file *file, int spaces)
-{
-	acl_t	acl;
-
-	(void)spaces;
-	if (listxattr(file->path, NULL, 0, XATTR_NOFOLLOW) > 0)
-		ft_fillbuff_c(env, 1, '@');
-	else if ((acl = acl_get_link_np(file->path, ACL_TYPE_EXTENDED)))
-	{
-		ft_fillbuff_c(env, 1, '+');
-		acl_free(acl);
-	}
-	else
-		ft_fillbuff_c(env, 1, ' ');
-	ft_fillbuff_c(env, 1, ' ');
-}
